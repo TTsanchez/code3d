@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторная работа №5</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        h1, h2, h3 {
+            color: #333;
+        }
+
+        iframe {
+            width: 80%; /* Ширина iframe составляет 80% ширины экрана */
+            height: 70vh; /* Высота iframe равна 70% высоты экрана */
+            border: 1px solid #ccc;
+            margin-top: 20px;
+        }
+
+        pre {
+            font-size: 1.4em;
+            margin-left: 2%; /* Отступ слева */
+            margin-right: 2%; /* Отступ справа */
+        }
+
+        @media only screen and (max-width: 600px) {
+            iframe {
+                width: 90%; /* На устройствах с шириной экрана до 600px ширина iframe становится 90% ширины экрана */
+                height: 50vh; /* Высота iframe на мобильных устройствах равна 50% высоты экрана */
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <center>
+        <h1>{{post.type_of_work}}</h1>
+        <h2>{{post.title}}</h2>
+        <h3>Студент гр. {{user.group or 'N/A'}} - {{user.last_name}} {{user.first_name[0]}}.{{user.father_name[0]}}.</h3>
+        {% if post.code3d.startswith('<scene') %}
+        <x3d width="80%" height="70vh">
+            {{post.code3d|safe}}
+        </x3d>
+        {% elif post.code3d %}
+            <iframe id="Okno" allowfullscreen src="{{post.code3d|safe}}"></iframe>
+        {% endif %}
+    </center>
+	<pre class="3dcode">{{post.content|safe }}</pre>
+
+<script src="https://www.x3dom.org/download/dev/x3dom-full.js"></script>
+</body>
+</html>

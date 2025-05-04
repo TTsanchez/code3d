@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Регистрация
+{% endblock %}
+
+{% block body %}
+<div class="container_reg">
+    <h1>Регистрация</h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div id = "block1">
+            <div class="form-group">
+                {{ form.username.label }}
+                {{ form.username(class="form-control") }}
+                {% for msg in get_flashed_messages(category_filter=['name']) %}
+                <div class="flash"> {{msg}} </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.first_name.label }}
+                {{ form.first_name(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.last_name.label }}
+                {{ form.last_name(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.father_name.label }}
+                {{ form.father_name(class="form-control") }}
+            </div>
+
+        </div>
+        <div id="block2">
+            <div class="form-group">
+                {{ form.email.label }}
+                {{ form.email(class="form-control") }}
+                {% for msg in get_flashed_messages(category_filter=['email']) %}
+                <div class="flash"> {{msg}} </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.gender.label }}
+                {{ form.gender(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.password.label }}
+                {{ form.password(class="form-control") }}
+            </div>
+            <div class="form-group">
+                {{ form.confirm_password.label }}
+                {{ form.confirm_password(class="form-control") }}
+                {% for msg in get_flashed_messages(category_filter=['password']) %}
+                <div class="flash"> {{msg}} </div>
+                {% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-primary") }}
+            </div>
+        </div>
+    </form>
+    {% for msg in get_flashed_messages(category_filter=['done']) %}
+    <div class="flash_done"> {{msg}} </div>
+    {% endfor %}
+    <button class="GoButton" id="backButton">Назад</button>
+    <button class="GoButton" id="nextButton">Далее</button>
+    </div>
+
+<script src="{{ url_for('static', filename='js/reg_back_and_next_bttns.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Создать пост
+{% endblock %}
+
+{% block body %}
+<div class="container">
+  <div class="form-group">
+    <h1 class="title_name">Создать новый пост</h1>
+    <form method="POST">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+          Выберите окружение:
+          {{ form.technology3d.label }}
+          {{ form.technology3d(class="form-control") }}
+      </div>
+      <div class="form-group">
+        <label> {{ form.type_of_work.label }}</label><br>{{ form.type_of_work(placeholder="Лабораторная работа №1",
+        style="resize: none;", maxlength="255") }}
+      </div>
+      <div class="form-group">
+        <label> {{ form.title.label }}</label><br>{{ form.title(placeholder="Название работы",
+        style="resize: none;", maxlength="255") }}
+      </div>
+      <div class="form-group">
+        <label> {{ form.content.label }} </label><br>{{ form.content(placeholder="Описание работы",
+        style="resize: none;white-space: pre-line;") | safe }}
+      </div>
+      <div class="form-group">
+        <label>{{ form.code3d.label }}</label><br>{{ form.code3d(id="code3d",style="resize: none;") }}
+        {% for msg in get_flashed_messages() %}
+          <div class="flash"> {{msg}} </div>
+        {% endfor %}
+      </div>
+      <div class="form-group">
+          {{ form.submit(id="publishButton", class="btn btn-primary") }}
+      </div>
+    </form>
+  </div>
+</div>
+<script src="{{ url_for('static', filename='js/Placeholder_project.js') }}"></script>
+<script src="{{ url_for('static', filename='js/auto_increase_area.js') }}"></script>
+{% endblock %}
