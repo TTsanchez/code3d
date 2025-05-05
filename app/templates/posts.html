@@ -72,6 +72,29 @@
                                         <div id="canvas-container" style="max-height: 300px; width: 100%;">
                                             <canvas id="three-canvas" style="min-height: 300px; width: 100%;"></canvas>
                                         </div>
+                                        <script>
+                                            document.addEventListener("DOMContentLoaded", function () {
+                                                const container = document.getElementById("canvas-container");
+                                                const canvas = document.getElementById("three-canvas");
+                                                const code = `{{ post.code3d|safe }}`;
+
+                                                try {
+                                                    const userScript = new Function('canvas', `
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(75, ${container.offsetWidth} / ${container.offsetHeight}, 0.1, 1000);
+          const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+          renderer.setSize(${container.offsetWidth}, ${container.offsetHeight});
+
+          ${code}
+        `);
+
+                                                    userScript(canvas);
+                                                } catch (e) {
+                                                    console.error('Ошибка выполнения Three.js кода:', e);
+                                                }
+                                            });
+                                        </script>
+
                                         {% endif %}
                                     </div>
                                 </div>
@@ -110,7 +133,6 @@
 <script src="{{ url_for('static', filename='js/copy_post.js') }}"></script>
 <!--Удаление поста-->
 <script src="{{ url_for('static', filename='js/del_post.js') }}"></script>
-<script src="{{ url_for('static', filename='js/3js_posts.js') }}"></script>
 <script src="{{ url_for('static', filename='js/datetime-utils.js') }}"></script>
 <script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
 

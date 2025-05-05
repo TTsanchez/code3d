@@ -130,6 +130,6 @@ textarea {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: pre-wrap;
-    word-wrap: break-word;
+    white-space: pre-line;  /* сохраняет \n, но убирает лишние пробелы */
 }
+
