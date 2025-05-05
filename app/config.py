@@ -11,4 +11,5 @@ class Config:
         'DATABASE_URL',
         'postgresql://user:password@localhost:5432/dbname'
     )
+    pool_pre_ping = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
