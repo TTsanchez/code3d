@@ -3,63 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/post_style.css') }}">
+    <!-- Подключаем стили CodeMirror -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/dracula.min.css">
+
     <title>Лабораторная работа №5</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
 
-        center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-
-        h1, h2, h3 {
-            color: #333;
-        }
-
-        iframe {
-            width: 80%; /* Ширина iframe составляет 80% ширины экрана */
-            height: 70vh; /* Высота iframe равна 70% высоты экрана */
-            border: 1px solid #ccc;
-            margin-top: 20px;
-        }
-
-        pre {
-            font-size: 1.4em;
-            margin-left: 2%; /* Отступ слева */
-            margin-right: 2%; /* Отступ справа */
-        }
-
-        @media only screen and (max-width: 600px) {
-            iframe {
-                width: 90%; /* На устройствах с шириной экрана до 600px ширина iframe становится 90% ширины экрана */
-                height: 50vh; /* Высота iframe на мобильных устройствах равна 50% высоты экрана */
-            }
-        }
-
-    </style>
 </head>
 <body>
     <center>
-        <h1>{{post.type_of_work}}</h1>
-        <h2>{{post.title}}</h2>
-        <h3>Студент гр. {{user.group or 'N/A'}} - {{user.last_name}} {{user.first_name[0]}}.{{user.father_name[0]}}.</h3>
-        {% if post.code3d.startswith('<scene') %}
+<!--        <h1>{{post.type_of_work}}</h1>-->
+<!--        <h2>{{post.title}}</h2>-->
+<!--        <h3>Студент гр. {{user.group or 'N/A'}} - {{user.last_name}} {{user.first_name[0]}}.{{user.father_name[0]}}.</h3>-->
+        {% if post.technology3d == 'x3dom' %}
         <x3d width="80%" height="70vh">
             {{post.code3d|safe}}
         </x3d>
-        {% elif post.code3d %}
+        {% elif post.technology3d == 'verge3d' %}
             <iframe id="Okno" allowfullscreen src="{{post.code3d|safe}}"></iframe>
+        {% elif post.technology3d == 'three.js' %}
+            <div class="threejs-header">
+                <h1>{{post.title}}</h1>
+                <h2>{{user.username}}</h2>
+            </div>
+
+            <div class="threejs-container">
+                <!-- Левая колонка -->
+                <div class="preview-section">
+                    <div id="canvas-container"></div>
+
+                    <div class="post-actions">
+                        <button class="like-btn">❤️ {{post.likes_count}}</button>
+                        <button class="share-btn">🔗 Поделиться</button>
+                        <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
+                    </div>
+
+                    <div class="comments-section" id="comments-section">
+                        <p>Комментарии пока отсутствуют</p>
+                    </div>
+                </div>
+
+                <!-- Правая колонка -->
+                <div class="code-section">
+                    <textarea id="editor">{{post.code3d}}</textarea>
+
+                    <div id="controls">
+                        <button onclick="runCode()">Запустить код</button>
+                        <div id="output"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="post-description">
+                <h3>Описание проекта</h3>
+                <p>{{post.description}}</p>
+            </div>
         {% endif %}
+
     </center>
 	<pre class="3dcode">{{post.content|safe }}</pre>
 
-<script src="https://www.x3dom.org/download/dev/x3dom-full.js"></script>
+{% if post.technology3d == 'x3dom' %}
+    <script src="https://www.x3dom.org/download/dev/x3dom-full.js"></script>
+{% elif post.technology3d == 'three.js' %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+    <script src="../static/js/run_code_3js.js"></script>
+    <script src="../static/js/EditorSyntaxHighlighting.js"></script>
+{% endif %}
 </body>
 </html>

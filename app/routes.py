@@ -146,6 +146,11 @@ def newpost():
                           'error')
                     return render_template('newpost.html', form=form)
 
+            elif form.technology3d.data == 'three.js':
+                if not ('THREE.Scene' in code3d_value or 'new THREE.' in code3d_value):
+                    flash('Код должен содержать Three.js сцену (например, new THREE.Scene())', 'error')
+                    return render_template('newpost.html', form=form)
+
             # Создание поста
             post = Posts(
                 title=form.title.data,
@@ -279,7 +284,6 @@ def delete_post():
             post_id=int(post_id),
             user_id=current_user.user_id  # Проверяем, что пост принадлежит текущему пользователю
         ).first()
-
         if not post:
             return jsonify({'error': 'Пост не найден или у вас нет прав на его удаление'}), 404
 

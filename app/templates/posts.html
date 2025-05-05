@@ -52,12 +52,18 @@
                             </h7>
                         </div>
                         <div id="canvas" class="col-sm-6">
-                          {% if post.code3d.startswith('<scene') %}
+                          {% if post.technology3d == 'x3dom' %}
                               <x3d width="100%" height="100%">
                                   {{post.code3d|safe}}
                               </x3d>
-                          {% elif post.code3d %}
+                          {% elif post.technology3d == 'verge3d' %}
                               <iframe style="min-height: 300px; width: 100%;" allowfullscreen src="{{post.code3d|safe}}"></iframe>
+
+                          {% elif post.technology3d == 'three.js' %}
+                              <div class="threejs-container">
+                                <!-- Левая колонка -->
+                                <div class="preview-section">
+                                    <div id="canvas-container"></div></div></div>
                           {% endif %}
                         </div>
                       </div>
@@ -97,4 +103,5 @@
 <!--Удаление поста-->
 <script src="{{ url_for('static', filename='js/del_post.js') }}"></script>
 <script src="{{ url_for('static', filename='js/datetime-utils.js') }}"></script>
+<script src="../static/js/run_code_3js.js"></script>
 {% endblock %}
