@@ -28,8 +28,6 @@ def index():
 
 @app.route('/posts')
 def posts():
-    if not current_user.is_authenticated:
-        return render_template("unauthorized.html")
 
     # Получаем параметр сортировки
     sort_order = request.args.get('sort', 'desc')  # По умолчанию 'desc'
@@ -78,9 +76,6 @@ def forum():
 
 @app.route('/post/<int:post_id>')
 def post(post_id):
-    if not current_user.is_authenticated:
-        return render_template("unauthorized.html")
-
     try:
         #
         post = Posts.query.filter_by(post_id=post_id).first()
