@@ -100,7 +100,9 @@
         {% endif %}
 
     </center>
-	<pre class="3dcode">{{post.content|safe }}</pre>
+    <div>
+	    <pre id="content">{{post.content}}</pre>
+    </div>
 
 {% if post.technology3d == 'x3dom' %}
     <script src="https://www.x3dom.org/download/dev/x3dom-full.js"></script>

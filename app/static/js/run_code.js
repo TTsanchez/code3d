@@ -76,7 +76,7 @@ function runCode_3js() {
         userScript(canvas);
         document.getElementById('output').textContent = '✓ Code executed successfully';
         document.getElementById('output').style.color = 'green';
-        } catch (e) {
+    } catch (e) {
         document.getElementById('output').textContent = '✗ Error: ' + e.message;
         document.getElementById('output').style.color = 'red';
     }
@@ -87,9 +87,9 @@ window.onload = runCode_3js;
 
 
 function toggleComments() {
-        const commentsSection = document.getElementById('comments-section');
-        commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
-    }
+    const commentsSection = document.getElementById('comments-section');
+    commentsSection.style.display = commentsSection.style.display === 'none' ? 'block' : 'none';
+}
 
 
 // // Автоматическое выравнивание высоты

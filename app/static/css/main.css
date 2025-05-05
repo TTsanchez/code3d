@@ -1,4 +1,4 @@
-body{
+body {
     background-color: #eee;
 }
 
@@ -44,24 +44,24 @@ form {
 }
 
 .GoButton {
-  background-color: gray;
-  color: white;
-  padding: 5px 20px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 16px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s;
+    background-color: gray;
+    color: white;
+    padding: 5px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .GoButton:hover {
-  background-color: darkgray;
+    background-color: darkgray;
 }
 
-#backButton{
+#backButton {
     pointer-events: none;
 }
 
@@ -76,26 +76,27 @@ form {
 #info_user_button, a {
     cursor: pointer;
 }
+
 #canvas {
     max-height: 300px;
 }
 
 
 .block {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  border-radius: 5px;
-  text-align: center;
-  transition: transform 0.3s ease;
-  width: 200px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    transition: transform 0.3s ease;
+    width: 200px;
 }
 
 .block:hover {
-  transform: scale(1.05);
+    transform: scale(1.05);
 }
 
-.title_name{
+.title_name {
     padding-top: 1em;
 }
 
@@ -103,22 +104,32 @@ input[type="text"],
 textarea {
     width: 100%;
     resize: none;
-  overflow: hidden;
-  min-height: 50px;
+    overflow: hidden;
+    min-height: 50px;
 }
 
-#delete_post_bttn{
+#delete_post_bttn {
     width: 20px;
     float: right;
     margin-right: 12px;
     margin-bottom: 5px;
 }
 
-.href_post{
+.href_post {
     text-decoration: none;
     color: #333333;
 }
 
-.rounded-circle{
+.rounded-circle {
     margin-right: 7px;
+}
+
+.clamp-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }

@@ -49,7 +49,10 @@
                                         <a class="href_post" href="/post/{{post.post_id}}" target="_blank">
                                             <h4 class="mb-4">{{post.title}}</h4>
                                         </a>
-                                        <p>{{post.content}}</p>
+                                        <pre class="clamp-text" align="justify">
+  {{ post.content[:340] }}{% if post.content|length > 300 %}...{% endif %}
+</pre>
+
                                         <h7 class="mb-4" data-utc-time="{{ post.created_at.isoformat() }}">
                                             <!-- Фолбэк для случаев без JavaScript -->
                                             <noscript>{{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }} (UTC)
