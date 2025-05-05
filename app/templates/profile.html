@@ -50,133 +50,176 @@
 -->
 
 <section style="background-color: #eee;">
-  <div class="container py-4">
-    <div class="row justify-content-center" class="row">
-      <div class="col-lg-4">
-        <div class="card mb-4">
-          <div class="card-body text-center">
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-              class="rounded-circle img-fluid" style="width: 150px;">
-            <h5 class="my-3">{{ user.username}}</h5>
-            <p class="text-muted mb-1">{{ user.first_name + ' ' + user.last_name }}</p>
-            <a id="info_user_button" class="text-muted mb-4">Подробнее</a>
-            <!--
+    <div class="container py-4">
+        <div class="row justify-content-center" class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                             alt="avatar"
+                             class="rounded-circle img-fluid" style="width: 150px;">
+                        <h5 class="my-3">{{ user.username}}</h5>
+                        <p class="text-muted mb-1">{{ user.first_name + ' ' + user.last_name }}</p>
+                        <a id="info_user_button" class="text-muted mb-4">Подробнее</a>
+                        <!--
 
-            <div class="d-flex justify-content-center mb-2">
-              <button type="button" class="btn btn-primary">Follow</button>
-              <button  type="button" class="btn btn-outline-primary ms-1">Подробнее</button>
-            </div> -->
-          </div>
-        </div>
-      </div>
-
-      <div id="info_user" class="col-lg-8">
-        <div class="card mb-4">
-          <div class="card-body">
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Полное имя</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">{{ user.last_name + ' ' + user.first_name + ' ' + user.father_name}}</p>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Email</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">{{ user.email }}</p>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">ID</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">{{ user.user_id }}</p>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Группа</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">{{ user.group or 'N/A' }}</p>
-              </div>
-            </div>
-            <hr>
-            <div class="row">
-              <div class="col-sm-3">
-                <p class="mb-0">Дата регистрации</p>
-              </div>
-              <div class="col-sm-9">
-                <p class="text-muted mb-0">{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-<section style="background-color: #eee;">
-<h2>Посты</h2>
-  {% for post in posts %}
-
-  <div class="container py-2" id="post-{{ post.post_id }}">
-    <div class="row justify-content-center" class="row">
-      <div>
-        <div id="delete_post_bttn" data-post-id="{{ post.post_id }}">
-              <a href="" class="d-block link-body-emphasis text-decoration-none"
-                 data-bs-toggle="dropdown" aria-expanded="false">. . .
-<!--                <img src="https://pro.guap.ru/images/no_image.jpg" alt="mdo" width="32" height="32" class="rounded-circle">-->
-              </a>
-              <ul class="dropdown-menu text-small" style="">
-                <li><a data-postid="{{ post.post_id }}" class="dropdown-item copyButton">Поделиться</a></li>
-                {% if user.user_id == current_user.user_id or current_user.superuser == True %}
-                <li><button onclick='del_post("{{ post.post_id  }}")' data-post-id="{{ post.post_id  }}" class="dropdown-item" >Удалить</button></li>
-                {% endif %}
-              </ul>
-            </div>
-      </div>
-      <div class="row">
-          <div class="col-lg-12">
-            <div class="card mb-4">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-sm-6">
-                    <a href="/user/{{user.username}}"><h6 class="mb-4"><img src="https://pro.guap.ru/images/no_image.jpg" width="32" height="32"
-                                     class="rounded-circle">{{user.username}}</h6></a>
-                    <a class="href_post" href="/post/{{post.post_id}}" target="_blank" data-post-id="{{ post.post_id }}">
-                      <h4 class="mb-4">{{post.title}}</h4>
-                    </a>
-                    <p>{{post.content}}</p>
-                    <h7 class="mb-4" data-utc-time="{{ post.created_at.isoformat() }}">
-                        <!-- Фолбэк для случаев без JavaScript -->
-                        <noscript>{{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }} (UTC)</noscript>
-                    </h7>
-                  </div>
-                  <div id="canvas" class="col-sm-6">
-                    {% if post.code3d.startswith('<scene') %}
-                        <x3d width="100%" height="100%">
-                            {{post.code3d|safe}}
-                        </x3d>
-                    {% elif post.code3d %}
-                        <iframe style="min-height: 300px; width: 100%;" allowfullscreen src="{{post.code3d|safe}}"></iframe>
-                    {% endif %}
-                  </div>
+                        <div class="d-flex justify-content-center mb-2">
+                          <button type="button" class="btn btn-primary">Follow</button>
+                          <button  type="button" class="btn btn-outline-primary ms-1">Подробнее</button>
+                        </div> -->
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
-      </div>
+
+            <div id="info_user" class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Полное имя</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{ user.last_name + ' ' + user.first_name + ' ' +
+                                    user.father_name}}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Email</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{ user.email }}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">ID</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{ user.user_id }}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Группа</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{ user.group or 'N/A' }}</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Дата регистрации</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <section style="background-color: #eee;">
+                <h2>Посты</h2>
+                {% for post in posts %}
+                <div class="container py-2" id="post-{{ post.post_id }}">
+                    <div class="row justify-content-center" class="row">
+                        <div>
+                            <div id="delete_post_bttn" data-post-id="{{ post.post_id }}">
+                                <a href="#" class="d-block link-body-emphasis text-decoration-none"
+                                   data-bs-toggle="dropdown" aria-expanded="false">. . .
+                                </a>
+                                <ul class="dropdown-menu text-small" style="">
+                                    <li><a data-postid="{{ post.post_id }}"
+                                           class="dropdown-item copyButton">Поделиться</a></li>
+                                    {% if post.user_id == current_user.user_id or current_user.superuser == True %}
+                                    <li>
+                                        <button onclick='del_post("{{ post.post_id }}")'
+                                                data-post-id="{{ post.post_id }}"
+                                                class="dropdown-item">Удалить
+                                        </button>
+                                    </li>
+                                    {% endif %}
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card mb-4">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <a href="/user/{{post.username}}"><h6 class="mb-4">
+                                                    <img src="https://pro.guap.ru/images/no_image.jpg" width="32"
+                                                         height="32"
+                                                         class="rounded-circle">{{post.username}}</h6>
+                                                </a>
+                                                <a class="href_post" href="/post/{{post.post_id}}" target="_blank">
+                                                    <h4 class="mb-4">{{post.title}}</h4>
+                                                </a>
+                                                <pre class="clamp-text" align="justify">
+                                          {{ post.content[:340] }}{% if post.content|length > 300 %}...{% endif %}
+                                        </pre>
+
+                                                <h7 class="mb-4" data-utc-time="{{ post.created_at.isoformat() }}">
+                                                    <!-- Фолбэк для случаев без JavaScript -->
+                                                    <noscript>{{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }} (UTC)
+                                                    </noscript>
+                                                </h7>
+                                            </div>
+                                            <div id="canvas" class="col-sm-6">
+                                                {% if post.technology3d == 'x3dom' %}
+                                                <x3d width="100%" height="100%">
+                                                    {{post.code3d|safe}}
+                                                </x3d>
+                                                {% elif post.technology3d == 'verge3d' %}
+                                                <iframe style="min-height: 300px; width: 100%;" allowfullscreen
+                                                        src="{{post.code3d|safe}}"></iframe>
+
+                                                {% elif post.technology3d == 'three.js' %}
+                                                <div id="canvas-container" style="max-height: 300px; width: 100%;">
+                                                    <canvas id="three-canvas"
+                                                            style="min-height: 300px; width: 100%;"></canvas>
+                                                </div>
+                                                <script>
+                                                    document.addEventListener("DOMContentLoaded", function () {
+                                                        const container = document.getElementById("canvas-container");
+                                                        const canvas = document.getElementById("three-canvas");
+                                                        const code = `{{ post.code3d|safe }}`;
+
+                                                        try {
+                                                            const userScript = new Function('canvas', `
+          const scene = new THREE.Scene();
+          const camera = new THREE.PerspectiveCamera(75, ${container.offsetWidth} / ${container.offsetHeight}, 0.1, 1000);
+          const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+          renderer.setSize(${container.offsetWidth}, ${container.offsetHeight});
+
+          ${code}
+        `);
+
+                                                            userScript(canvas);
+                                                        } catch (e) {
+                                                            console.error('Ошибка выполнения Three.js кода:', e);
+                                                        }
+                                                    });
+                                                </script>
+
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </section>
+        </div>
     </div>
-  </div>
-        {% endfor %}
-</section>
-    </div>
-  </div>
 </section>
 
 <script src="{{ url_for('static', filename='js/open_user_info.js') }}"></script>
@@ -187,4 +230,5 @@
 <!--Удаление поста-->
 <script src="{{ url_for('static', filename='js/del_post.js') }}"></script>
 <script src="{{ url_for('static', filename='js/datetime-utils.js') }}"></script>
+<script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
 {% endblock %}

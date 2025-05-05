@@ -5,12 +5,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
         const userScript = new Function('canvas', `
-          const scene = new THREE.Scene();
-          const camera = new THREE.PerspectiveCamera(75, ${container.offsetWidth} / ${container.offsetHeight}, 0.1, 1000);
-          const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-          renderer.setSize(${container.offsetWidth}, ${container.offsetHeight});
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, ${container.offsetWidth} / ${container.offsetHeight}, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+            renderer.setSize(${container.offsetWidth}, ${container.offsetHeight});
 
-          ${code}
+            ${code}
         `);
 
         userScript(canvas);
