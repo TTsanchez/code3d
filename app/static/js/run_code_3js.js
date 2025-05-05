@@ -33,14 +33,14 @@ function toggleComments() {
     }
 
 
-// Автоматическое выравнивание высоты
-function adjustHeights() {
-    if (window.innerWidth > 768) {
-        const preview = document.querySelector('.preview-section');
-        const code = document.querySelector('.code-section');
-        code.style.height = preview.offsetHeight + 'px';
-    }
-}
+// // Автоматическое выравнивание высоты
+// function adjustHeights() {
+//     if (window.innerWidth > 768) {
+//         const preview = document.querySelector('.preview-section');
+//         const code = document.querySelector('.code-section');
+//         code.style.height = preview.offsetHeight + 'px';
+//     }
+// }
 
 window.addEventListener('load', adjustHeights);
 window.addEventListener('resize', adjustHeights);
