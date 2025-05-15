@@ -20,6 +20,13 @@ def load_user(user_id):
     return Users.query.get(user_id)
 
 
+@app.before_request
+def redirect_www_to_non_www():
+    """Перенаправляет www.code3d.ru → code3d.ru"""
+    if request.host.startswith('www.'):
+        return redirect(request.url.replace('www.', '', 1), code=301)
+
+
 @app.route('/')
 @app.route('/home')
 def index():
@@ -28,7 +35,6 @@ def index():
 
 @app.route('/posts')
 def posts():
-
     # Получаем параметр сортировки
     sort_order = request.args.get('sort', 'desc')  # По умолчанию 'desc'
     if sort_order not in ['asc', 'desc']:
@@ -92,7 +98,7 @@ def post(post_id):
         return render_template("post.html", post=post, user=user)
 
     except Exception as e:
-        app.logger.error(f"Ошибка при загрузке поста: {str(e)|e}")
+        app.logger.error(f"Ошибка при загрузке поста: {str(e) | e}")
         return render_template('500.html', error="Ошибка сервера"), 500
 
 
