@@ -19,12 +19,12 @@ login_manager.init_app(app)
 def load_user(user_id):
     return Users.query.get(user_id)
 
-
-@app.before_request
-def redirect_www_to_non_www():
-    """Перенаправляет www.code3d.ru → code3d.ru"""
-    if request.host.startswith('www.'):
-        return redirect(request.url.replace('www.', '', 1), code=301)
+# Настроил с Cloudflare
+# @app.before_request
+# def redirect_www_to_non_www():
+#     """Перенаправляет www.code3d.ru → code3d.ru"""
+#     if request.host.startswith('www.'):
+#         return redirect(request.url.replace('www.', '', 1), code=301)
 
 
 @app.route('/')

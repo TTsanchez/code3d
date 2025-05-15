@@ -133,3 +133,47 @@ textarea {
     white-space: pre-line;  /* сохраняет \n, но убирает лишние пробелы */
 }
 
+.post-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.post-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+.post-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    background-color: #f9f9f9;
+}
+
+.username:hover span {
+    color: #00bcd4; /* бирюзовый акцент, как в логотипе */
+    text-shadow: 0 0 3px rgba(0, 188, 212, 0.5);
+    transition: all 0.3s ease;
+}
+
+.username img {
+    border: 2px solid #00bcd4;
+    /* padding: 2px;*/
+    background-color: white;
+}
+
+.username span {
+    font-family: 'Segoe UI', 'Roboto', sans-serif;
+    font-size: 1rem;
+}
+
+.btn-registration {
+    background-color: #00bcd4 !important;
+    transition: 0.3s;
+}
+
+.btn-registration:hover {
+    background-color: #02cee8 !important;
+    color: #212529 !important;
+    transition: 0.3s;
+}

@@ -38,27 +38,31 @@
                 </div>
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="card mb-4">
+                        <div class="card mb-4 post-card" data-href="/post/{{ post.post_id }}">
                             <div class="card-body">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <a href="/user/{{post.username}}"><h6 class="mb-4">
-                                            <img src="https://pro.guap.ru/images/no_image.jpg" width="32" height="32"
-                                                 class="rounded-circle">{{post.username}}</h6>
+                                        <a class="username d-flex align-items-center gap-2 text-decoration-none mb-2"
+                                           href="/user/{{post.username}}">
+                                            <img src="https://i.postimg.cc/m27FcBSf/no-image.png" width="36" height="36"
+                                                 class="rounded-circle shadow-sm">
+                                            <span class="fw-semibold text-primary">{{post.username}}</span>
                                         </a>
+
                                         <a class="href_post" href="/post/{{post.post_id}}" target="_blank">
                                             <h4 class="mb-4">{{post.title}}</h4>
                                         </a>
+
                                         <pre class="clamp-text" align="justify">
-                                          {{ post.content[:340] }}{% if post.content|length > 300 %}...{% endif %}
-                                        </pre>
+                    {{ post.content[:340] }}{% if post.content|length > 300 %}...{% endif %}
+                </pre>
 
                                         <h7 class="mb-4" data-utc-time="{{ post.created_at.isoformat() }}">
-                                            <!-- Фолбэк для случаев без JavaScript -->
                                             <noscript>{{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }} (UTC)
                                             </noscript>
                                         </h7>
                                     </div>
+
                                     <div id="canvas" class="col-sm-6">
                                         {% if post.technology3d == 'x3dom' %}
                                         <x3d width="100%" height="100%">
@@ -67,7 +71,6 @@
                                         {% elif post.technology3d == 'verge3d' %}
                                         <iframe style="min-height: 300px; width: 100%;" allowfullscreen
                                                 src="{{post.code3d|safe}}"></iframe>
-
                                         {% elif post.technology3d == 'three.js' %}
                                         <div id="canvas-container" style="max-height: 300px; width: 100%;">
                                             <canvas id="three-canvas" style="min-height: 300px; width: 100%;"></canvas>
@@ -80,26 +83,24 @@
 
                                                 try {
                                                     const userScript = new Function('canvas', `
-          const scene = new THREE.Scene();
-          const camera = new THREE.PerspectiveCamera(75, ${container.offsetWidth} / ${container.offsetHeight}, 0.1, 1000);
-          const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-          renderer.setSize(${container.offsetWidth}, ${container.offsetHeight});
-
-          ${code}
-        `);
-
+                                const scene = new THREE.Scene();
+                                const camera = new THREE.PerspectiveCamera(75, ${container.offsetWidth} / ${container.offsetHeight}, 0.1, 1000);
+                                const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+                                renderer.setSize(${container.offsetWidth}, ${container.offsetHeight});
+                                ${code}
+                            `);
                                                     userScript(canvas);
                                                 } catch (e) {
                                                     console.error('Ошибка выполнения Three.js кода:', e);
                                                 }
                                             });
                                         </script>
-
                                         {% endif %}
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -131,6 +132,7 @@
 
 <!--Копирование ссылки на пост-->
 <script src="{{ url_for('static', filename='js/copy_post.js') }}"></script>
+<script src="{{ url_for('static', filename='js/postCardRedirect.js') }}"></script>
 <!--Удаление поста-->
 <script src="{{ url_for('static', filename='js/del_post.js') }}"></script>
 <script src="{{ url_for('static', filename='js/datetime-utils.js') }}"></script>
