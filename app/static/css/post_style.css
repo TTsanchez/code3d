@@ -74,8 +74,32 @@
     color: #abb2bf;
     font-size: 14px;
     line-height: 1.5;
-    overflow: hidden;
+    overflow: auto; /* Включаем прокрутку */
 }
+
+/* Сам ползунок */
+::-webkit-scrollbar {
+    width: 8px;  /* Толщина вертикального скролла */
+    height: 8px; /* Толщина горизонтального скролла */
+}
+
+/* Трек (фон скролла) */
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+/* Сам бегунок (ползунок) */
+::-webkit-scrollbar-thumb {
+    background-color: rgba(200, 200, 200, 0.3);
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+/* При наведении на ползунок */
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(200, 200, 200, 0.6);
+}
+
 
 /* Адаптивность для мобильных */
 @media (max-width: 768px) {
