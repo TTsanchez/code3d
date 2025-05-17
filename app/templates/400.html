@@ -9,15 +9,13 @@ ERROR 404
 {% endblock %}
 
 {% block body %}
-<center>
-    <h1><b>ERROR 400</b></h1>
-    <h5>Bad Request</h5>
-    <h3>The CSRF token is invalid.</h3>
-    <br>
-    <img src="https://i.postimg.cc/Bn4qccGx/400.png" width="300em">
-    <br>
-    <br>
-    <br>
-</center>
+<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+    <div class="text-center p-4" style="max-width: 600px;">
+        <h1 class="display-4 fw-bold">ERROR 400</h1>
+        <h5>Bad Request</h5>
+        <h3 class="mb-4">The CSRF token is invalid.</h3>
+        <img src="https://i.postimg.cc/Bn4qccGx/400.png" class="img-fluid mb-4" style="max-width: 300px;">
+    </div>
+</div>
 {% endblock %}
 

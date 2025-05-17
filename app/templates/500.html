@@ -5,13 +5,11 @@ ERROR 500
 {% endblock %}
 
 {% block body %}
-<center>
-    <h1><b>ERROR 500</b></h1>
-    <h2>Ошибка БД</h2>
-    <br>
-    <img src="https://i.postimg.cc/7hYg3Gqx/bd-error.png" width="300em">
-    <br>
-    <br>
-    <br>
-</center>
+<div class="d-flex flex-column min-vh-100 justify-content-center align-items-center">
+    <div class="text-center p-4" style="max-width: 600px;">
+        <h1 class="display-4 fw-bold mb-4">ERROR 500</h1>
+        <h5 class="mb-4">Ошибка БД</h5>
+        <img src="https://i.postimg.cc/7hYg3Gqx/bd-error.png" class="img-fluid mb-4" style="max-width: 300px;">
+    </div>
+</div>
 {% endblock %}

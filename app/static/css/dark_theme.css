@@ -1,0 +1,57 @@
+body {
+    background-color: #212830;
+}
+
+header{
+    background-color: #151b23;
+}
+
+p,pre,h1,h2,h3,h4,h5,h6,h7,a,label{
+    color: #d1d7dd !important;
+}
+
+.del_button {
+    color: orangered;
+}
+
+.del_button:hover {
+    color: orangered;
+}
+
+canvas, iframe{
+    border-style: solid;
+    background-color: #2a313c;
+    border-radius: 12px;
+    border-color: #212830;
+    border-width: 1px;
+}
+
+.card, .container_reg {
+    background-color: #383f48;
+}
+
+.post-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.post-card:hover {
+    box-shadow: 0 8px 10px rgba(0, 188, 212, .5);
+    background-color: #363741;
+}
+
+.dropdown-menu {
+    background-color: #383f48;
+}
+
+.dropdown-item:hover {
+    background-color: #00bcd4;
+}
+
+.container_reg {
+    border-color: #00bcd4;
+}
+
+.preview-section, .code-section {
+    background-color: #383f48;
+}

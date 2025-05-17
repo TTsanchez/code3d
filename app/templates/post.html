@@ -1,19 +1,10 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/post_style.css') }}">
+{% extends 'base2.html' %}
 
-    <!-- CodeMirror CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material.min.css">
+{% block title %}
+{{post.title}} | {{user.username}} | Code3d.ru
+{% endblock %}
 
-
-    <title>Лабораторная работа №5</title>
-
-</head>
-<body>
+{% block body %}
 <center>
     <!--        <h1>{{post.type_of_work}}</h1>-->
     <!--        <h2>{{post.title}}</h2>-->
@@ -103,6 +94,11 @@
     <pre id="content">{{post.content}}</pre>
 </div>
 
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/post_style.css') }}">
+<!-- CodeMirror CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material.min.css">
 <!-- CodeMirror JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
@@ -120,5 +116,4 @@
 <script src="../static/js/3js_run_code.js"></script>
 
 {% endif %}
-</body>
-</html>
+{% endblock %}
