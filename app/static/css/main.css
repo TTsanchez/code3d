@@ -193,3 +193,8 @@ textarea {
   background-color: #00bcd4;
   border-color: #00bcd4;
 }
+
+canvas {
+    display: block;
+    border-radius: 4px;
+}

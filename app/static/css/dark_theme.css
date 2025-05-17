@@ -18,10 +18,10 @@ p,pre,h1,h2,h3,h4,h5,h6,h7,a,label{
     color: orangered;
 }
 
-canvas, iframe{
+.x3dom-canvas,.three-canvas, iframe{
     border-style: solid;
     background-color: #2a313c;
-    border-radius: 12px;
+    border-radius: 4px;
     border-color: #212830;
     border-width: 1px;
 }

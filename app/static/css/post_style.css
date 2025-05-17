@@ -50,9 +50,7 @@
 #canvas-container {
     width: 100%;
     flex-grow: 1; /* Занимает всё доступное пространство */
-    background: #000;
     border-radius: 4px;
-    margin-bottom: 0px;
     min-height: 300px;
 }
 #content{
