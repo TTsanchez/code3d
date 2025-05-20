@@ -28,6 +28,7 @@ p,pre,h1,h2,h3,h4,h5,h6,h7,a,label{
 
 .card, .container_reg {
     background-color: #383f48;
+    position: relative;
 }
 
 .post-card-link {
@@ -38,6 +39,12 @@ p,pre,h1,h2,h3,h4,h5,h6,h7,a,label{
 .post-card:hover {
     box-shadow: 0 8px 10px rgba(0, 188, 212, .5);
     background-color: #363741;
+}
+
+.dropdown-toggle {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
 }
 
 .dropdown-menu {
@@ -54,4 +61,8 @@ p,pre,h1,h2,h3,h4,h5,h6,h7,a,label{
 
 .preview-section, .code-section {
     background-color: #383f48;
+}
+
+#options_post:hover {
+  color: #00bcd4!important;
 }
