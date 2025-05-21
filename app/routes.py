@@ -8,7 +8,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 from app import app, db
-from app.classes_bd import Posts, Users
+from app.classes_bd import Posts, Users, PostLike
 from app.forms import CreatePostForm, RegistrationForm, AuthorizationForm
 
 login_manager = LoginManager()
@@ -298,6 +298,36 @@ def delete_post():
         db.session.rollback()
         app.logger.error(f'Ошибка при удалении поста {post_id}: {str(e)}')
         return jsonify({'error': 'Внутренняя ошибка сервера'}), 500
+
+
+@app.route('/like/<int:post_id>', methods=['POST'])
+@login_required
+def like_post(post_id):
+    post = Posts.query.get_or_404(post_id)
+
+    # Проверяем, ставил ли пользователь лайк
+    existing_like = PostLike.query.filter_by(user_id=current_user.user_id, post_id=post_id).first()
+
+    if existing_like:
+        # Удаляем лайк
+        db.session.delete(existing_like)
+        liked = False
+    else:
+        # Добавляем лайк
+        new_like = PostLike(user_id=current_user.user_id, post_id=post_id)
+        db.session.add(new_like)
+        liked = True
+
+    db.session.commit()
+
+    # Считаем текущее количество лайков
+    likes_count = PostLike.query.filter_by(post_id=post_id).count()
+
+    return jsonify({
+        'success': True,
+        'liked': liked,
+        'likes_count': likes_count
+    })
 
 
 def is_valid_url(url):

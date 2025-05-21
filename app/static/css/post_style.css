@@ -139,6 +139,7 @@
 .post-actions button {
     padding: 4px 12px;
     font-size: 14px;
+    border-radius: 20px;
 }
 
 .like-btn {

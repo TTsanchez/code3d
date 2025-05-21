@@ -5,6 +5,12 @@
 {% endblock %}
 
 {% block body %}
+
+{% set user_liked = false %}
+{% if current_user.is_authenticated %}
+{% set user_liked = post.likes | selectattr("user_id", "equalto", current_user.user_id) | list | length > 0 %}
+{% endif %}
+
 <center>
     <!--        <h1>{{post.type_of_work}}</h1>-->
     <!--        <h2>{{post.title}}</h2>-->
@@ -23,7 +29,11 @@
             </x3d>
 
             <div class="post-actions">
-                <button class="like-btn">❤️ {{post.likes_count}}</button>
+                <button class="like-btn {% if user_liked %}liked{% endif %}"
+                        data-post-id="{{ post.post_id }}"
+                        onclick="likePost('{{ post.post_id }}')">
+                    ❤️ {{ post.likes|length }}
+                </button>
                 <button class="share-btn">🔗 Поделиться</button>
                 <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
             </div>
@@ -48,8 +58,45 @@
         <h3>Описание проекта</h3>
         <p>{{post.description}}</p>
     </div>
+
     {% elif post.technology3d == 'verge3d' %}
-    <iframe id="Okno" allowfullscreen src="{{post.code3d|safe}}"></iframe>
+    <div class="verge3d-container">
+        <!-- Заголовок и автор -->
+        <div class="threejs-header">
+            <h1>{{ post.title }}</h1>
+            <h2>{{ user.username }}</h2>
+        </div>
+
+        <!-- Просмотр 3D-сцены -->
+        <div class="preview-section-verge">
+            <iframe id="Okno" allowfullscreen src="{{ post.code3d|safe }}" width="100%" height="600vh"
+                    style="border: none;"></iframe>
+
+            <!-- Кнопки действий -->
+            <div class="post-actions">
+                <button class="like-btn {% if user_liked %}liked{% endif %}"
+                        data-post-id="{{ post.post_id }}"
+                        onclick="likePost('{{ post.post_id }}')">
+                    ❤️ {{ post.likes|length }}
+                </button>
+
+                <button class="share-btn">🔗 Поделиться</button>
+                <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
+            </div>
+
+            <!-- Комментарии -->
+            <div class="comments-section" id="comments-section">
+                <p>Комментарии пока отсутствуют</p>
+            </div>
+        </div>
+
+        <!-- Описание проекта -->
+        <div class="post-description">
+            <h3>Описание проекта</h3>
+            <p>{{ post.description }}</p>
+        </div>
+    </div>
+
     {% elif post.technology3d == 'three.js' %}
     <div class="threejs-header">
         <h1>{{post.title}}</h1>
@@ -62,7 +109,11 @@
             <div id="canvas-container"></div>
 
             <div class="post-actions">
-                <button class="like-btn">❤️ {{post.likes_count}}</button>
+                <button class="like-btn {% if user_liked %}liked{% endif %}"
+                        data-post-id="{{ post.post_id }}"
+                        onclick="likePost('{{ post.post_id }}')">
+                    ❤️ {{ post.likes|length }}
+                </button>
                 <button class="share-btn">🔗 Поделиться</button>
                 <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
             </div>
@@ -95,6 +146,8 @@
 </div>
 
 
+<!-- Подключение jQuery  -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <link rel="stylesheet" href="{{ url_for('static', filename='css/post_style.css') }}">
 <!-- CodeMirror CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
@@ -102,7 +155,11 @@
 <!-- CodeMirror JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+
 <script src="../static/js/toggleComments.js"></script>
+<script src="{{ url_for('static', filename='js/copy_post.js') }}"></script>
+<script src="{{ url_for('static', filename='js/show_flash_message.js') }}"></script>
+<script src="../static/js/likePost.js"></script>
 
 {% if post.technology3d == 'x3dom' %}
 <!-- X3DOM -->
@@ -114,6 +171,5 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="../static/js/3js_run_code.js"></script>
-
 {% endif %}
 {% endblock %}

@@ -25,7 +25,7 @@
                            data-bs-toggle="dropdown" aria-expanded="false">. . .
                         </a>
                         <ul class="dropdown-menu text-small" style="">
-                            <li><a data-postid="{{ post.post_id }}" class="dropdown-item copyButton">Поделиться</a></li>
+                            <li><a data-postid="{{ post.post_id }}" class="dropdown-item share-btn">Поделиться</a></li>
                             {% if post.user_id == current_user.user_id or current_user.superuser == True %}
                             <li>
                                 <button onclick='del_post("{{ post.post_id }}")' data-post-id="{{ post.post_id }}"
@@ -132,6 +132,8 @@
 
 <!--Копирование ссылки на пост-->
 <script src="{{ url_for('static', filename='js/copy_post.js') }}"></script>
+<script src="{{ url_for('static', filename='js/show_flash_message.js') }}"></script>
+
 <script src="{{ url_for('static', filename='js/postCardRedirect.js') }}"></script>
 <!--Удаление поста-->
 <script src="{{ url_for('static', filename='js/del_post.js') }}"></script>

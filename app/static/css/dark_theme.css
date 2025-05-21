@@ -6,8 +6,26 @@ header{
     background-color: #151b23;
 }
 
-p,pre,h1,h2,h3,h4,h5,h6,h7,a,label{
+p,pre,h1,h2,h3,h4,h5,h6,h7,a,label, loginModalLabel{
     color: #d1d7dd !important;
+}
+
+.modal_href{
+    color: #00bcd4!important;
+}
+
+.btn-close.cyan {
+    background: none; /* убрать стандартный SVG */
+    color: #00bcd4;
+    font-size: 2em;
+    line-height: 1;
+    position: relative;
+    top: -2px;
+}
+
+
+.modal-content{
+    background-color: #212830;
 }
 
 .del_button {
@@ -41,12 +59,6 @@ p,pre,h1,h2,h3,h4,h5,h6,h7,a,label{
     background-color: #363741;
 }
 
-.dropdown-toggle {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-}
-
 .dropdown-menu {
     background-color: #383f48;
 }
@@ -59,10 +71,14 @@ p,pre,h1,h2,h3,h4,h5,h6,h7,a,label{
     border-color: #00bcd4;
 }
 
-.preview-section, .code-section {
-    background-color: #383f48;
+.preview-section, .code-section, .comments-section{
+    background-color: #383f48!important;
 }
 
 #options_post:hover {
   color: #00bcd4!important;
+}
+
+.modal_href{
+    color: #00bcd4!important;
 }

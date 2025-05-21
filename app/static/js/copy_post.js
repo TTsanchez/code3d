@@ -1,32 +1,30 @@
-<!--Копирование ссылки на пост-->
-// Получаем все элементы с классом "copyButton"
-var copyButtons = document.querySelectorAll('.copyButton');
+document.addEventListener('DOMContentLoaded', function() {
+    const copyButtons = document.querySelectorAll('.share-btn');
 
-// Добавляем слушатель события клика для каждой кнопки
-copyButtons.forEach(function(button) {
-    button.addEventListener('click', function() {
-        // Получаем текущий URL страницы
-        var currentUrl = window.location.href;
+    copyButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const postId = button.getAttribute('data-postid');
+            let linkToCopy;
 
-        // Находим позицию первого символа "/"
-        var firstSlashIndex = currentUrl.indexOf('/');
-        // Находим позицию второго символа "/" начиная с позиции после первого "/"
-        var secondSlashIndex = currentUrl.indexOf('/', firstSlashIndex + 1);
-        // Находим позицию третьего символа "/" начиная с позиции после второго "/"
-        var thirdSlashIndex = currentUrl.indexOf('/', secondSlashIndex + 1);
+            if (postId) {
+                // Генерируем ссылку вида /post/123
+                const currentUrl = window.location.href;
+                const firstSlash = currentUrl.indexOf('/');
+                const secondSlash = currentUrl.indexOf('/', firstSlash + 1);
+                const thirdSlash = currentUrl.indexOf('/', secondSlash + 1);
+                const baseUrl = currentUrl.substring(0, thirdSlash);
+                linkToCopy = `${baseUrl}/post/${postId}`;
+            } else {
+                // Просто текущий URL
+                linkToCopy = window.location.href;
+            }
 
-        // Получаем базовый URL до третьего "/"
-        var baseUrl = currentUrl.substring(0, thirdSlashIndex);
-
-        var postId = button.getAttribute('data-postid');
-        var postLink = baseUrl + '/post/' + postId;
-
-        navigator.clipboard.writeText(postLink).then(function() {
-            // Используем вашу функцию show_flash_message вместо notification
-            show_flash_message('Ссылка на пост скопирована: ' + postLink, 'success');
-        }, function(err) {
-            show_flash_message('Не удалось скопировать ссылку', 'danger');
-            console.error('Не удалось скопировать ссылку:', err);
+            navigator.clipboard.writeText(linkToCopy).then(function() {
+                show_flash_message('Ссылка скопирована: ' + linkToCopy, 'success');
+            }).catch(function(err) {
+                show_flash_message('Не удалось скопировать ссылку', 'danger');
+                console.error('Ошибка копирования:', err);
+            });
         });
     });
 });
