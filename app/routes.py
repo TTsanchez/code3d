@@ -19,6 +19,7 @@ login_manager.init_app(app)
 def load_user(user_id):
     return Users.query.get(user_id)
 
+
 # Настроил с Cloudflare
 # @app.before_request
 # def redirect_www_to_non_www():
@@ -95,7 +96,13 @@ def post(post_id):
         if not user:  # Проверка на существование пользователя
             return render_template('404.html', error="Автор не найден"), 404
 
-        return render_template("post.html", post=post, user=user)
+        # Все id постов, которые лайкал текущий пользователь
+        liked_post_ids = set()
+        if current_user.is_authenticated:
+            liked = PostLike.query.with_entities(PostLike.post_id).filter_by(user_id=current_user.user_id).all()
+            liked_post_ids = {row.post_id for row in liked}
+
+        return render_template("post.html", post=post, user=user, liked_post_ids=liked_post_ids)
 
     except Exception as e:
         app.logger.error(f"Ошибка при загрузке поста: {str(e) | e}")

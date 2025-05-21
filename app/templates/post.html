@@ -5,10 +5,16 @@
 {% endblock %}
 
 {% block body %}
-
-{% set user_liked = false %}
-{% if current_user.is_authenticated %}
-{% set user_liked = post.likes | selectattr("user_id", "equalto", current_user.user_id) | list | length > 0 %}
+{% if post.technology3d == 'x3dom' %}
+<!-- X3DOM -->
+<link rel="stylesheet" href="https://www.x3dom.org/download/x3dom.css">
+<script src="https://www.x3dom.org/download/x3dom.js"></script>
+<script src="https://www.x3dom.org/download/dev/x3dom-full.js"></script>
+<script src="../static/js/x3d_run_code.js"></script>
+{% elif post.technology3d == 'three.js' %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="../static/js/3js_run_code.js"></script>
 {% endif %}
 
 <center>
@@ -114,6 +120,7 @@
                         onclick="likePost('{{ post.post_id }}')">
                     ❤️ {{ post.likes|length }}
                 </button>
+
                 <button class="share-btn">🔗 Поделиться</button>
                 <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
             </div>
@@ -161,15 +168,4 @@
 <script src="{{ url_for('static', filename='js/show_flash_message.js') }}"></script>
 <script src="../static/js/likePost.js"></script>
 
-{% if post.technology3d == 'x3dom' %}
-<!-- X3DOM -->
-<link rel="stylesheet" href="https://www.x3dom.org/download/x3dom.css">
-<script src="https://www.x3dom.org/download/x3dom.js"></script>
-<script src="https://www.x3dom.org/download/dev/x3dom-full.js"></script>
-<script src="../static/js/x3d_run_code.js"></script>
-{% elif post.technology3d == 'three.js' %}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="../static/js/3js_run_code.js"></script>
-{% endif %}
 {% endblock %}
