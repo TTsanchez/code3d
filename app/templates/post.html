@@ -7,6 +7,15 @@
 {% block body %}
 {% set user_liked = post.post_id in liked_post_ids %}
 
+<!-- Подключение jQuery  -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/post_style.css') }}">
+<!-- CodeMirror CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material.min.css">
+<!-- CodeMirror JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
 {% if post.technology3d == 'x3dom' %}
 <!-- X3DOM -->
 <link rel="stylesheet" href="https://www.x3dom.org/download/x3dom.css">
@@ -151,15 +160,7 @@
 </div>
 
 
-<!-- Подключение jQuery  -->
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/post_style.css') }}">
-<!-- CodeMirror CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material.min.css">
-<!-- CodeMirror JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+
 
 <script src="../static/js/toggleComments.js"></script>
 <script src="{{ url_for('static', filename='js/copy_post.js') }}"></script>
