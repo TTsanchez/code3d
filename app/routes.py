@@ -8,8 +8,8 @@ from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 from app import app, db
-from app.classes_bd import Posts, Users, PostLike
-from app.forms import CreatePostForm, RegistrationForm, AuthorizationForm
+from app.classes_bd import Posts, Users, PostLike, Comments, CommentLike
+from app.forms import CreatePostForm, RegistrationForm, AuthorizationForm, CommentForm
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -102,10 +102,17 @@ def post(post_id):
             liked = PostLike.query.with_entities(PostLike.post_id).filter_by(user_id=current_user.user_id).all()
             liked_post_ids = {row.post_id for row in liked}
 
-        return render_template("post.html", post=post, user=user, liked_post_ids=liked_post_ids)
+        # Подгружаем комментарии
+        comments = Comments.query.filter_by(post_id=post_id, parent_comment_id=None).order_by(
+                Comments.created_at).all()
+
+        return render_template("post.html", post=post, user=user,
+                               liked_post_ids=liked_post_ids,
+                               comments=comments,
+                               form=CommentForm())
 
     except Exception as e:
-        app.logger.error(f"Ошибка при загрузке поста: {str(e) | e}")
+        app.logger.error(f"Ошибка при загрузке поста: {e}")
         return render_template('500.html', error="Ошибка сервера"), 500
 
 
@@ -341,3 +348,29 @@ def is_valid_url(url):
     pattern = r'^https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+'
     match = re.match(pattern, url)
     return bool(match)
+
+
+@app.route('/comment/<int:post_id>', methods=['POST'])
+@login_required
+def add_comment(post_id):
+    form = CommentForm()
+
+    if form.validate_on_submit():
+        content = form.content.data.strip()
+        parent_id = form.parent_comment_id.data or None
+
+        comment = Comments(
+            user_id=current_user.user_id,
+            post_id=post_id,
+            content=content,
+            parent_comment_id=parent_id
+        )
+
+        db.session.add(comment)
+        db.session.commit()
+
+        return redirect(url_for('post', post_id=post_id))
+
+    flash('Ошибка в форме комментария.', 'danger')
+    return redirect(url_for('post', post_id=post_id))
+

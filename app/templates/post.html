@@ -5,6 +5,8 @@
 {% endblock %}
 
 {% block body %}
+{% set user_liked = post.post_id in liked_post_ids %}
+
 {% if post.technology3d == 'x3dom' %}
 <!-- X3DOM -->
 <link rel="stylesheet" href="https://www.x3dom.org/download/x3dom.css">
@@ -43,10 +45,8 @@
                 <button class="share-btn">🔗 Поделиться</button>
                 <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
             </div>
-
-            <div class="comments-section" id="comments-section">
-                <p>Комментарии пока отсутствуют</p>
-            </div>
+            <!-- Комментарии -->
+            {% include 'includes/post_comments.html' %}
         </div>
 
         <!-- Правая колонка -->
@@ -91,16 +91,15 @@
             </div>
 
             <!-- Комментарии -->
-            <div class="comments-section" id="comments-section">
-                <p>Комментарии пока отсутствуют</p>
-            </div>
+            {% include 'includes/post_comments.html' %}
         </div>
+    </div>
 
-        <!-- Описание проекта -->
-        <div class="post-description">
-            <h3>Описание проекта</h3>
-            <p>{{ post.description }}</p>
-        </div>
+    <!-- Описание проекта -->
+    <div class="post-description">
+        <h3>Описание проекта</h3>
+        <p>{{ post.description }}</p>
+    </div>
     </div>
 
     {% elif post.technology3d == 'three.js' %}
@@ -125,9 +124,8 @@
                 <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
             </div>
 
-            <div class="comments-section" id="comments-section">
-                <p>Комментарии пока отсутствуют</p>
-            </div>
+            <!-- Комментарии -->
+            {% include 'includes/post_comments.html' %}
         </div>
 
         <!-- Правая колонка -->

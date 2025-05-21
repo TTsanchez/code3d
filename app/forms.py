@@ -1,6 +1,6 @@
 #Форма заполнения поста
 from flask_wtf import FlaskForm
-from wtforms import TextAreaField, SelectField, SubmitField, StringField, PasswordField, BooleanField
+from wtforms import TextAreaField, SelectField, SubmitField, StringField, PasswordField, BooleanField, HiddenField
 from wtforms.validators import DataRequired, Length, Optional
 
 
@@ -34,3 +34,9 @@ class AuthorizationForm(FlaskForm):
     password = PasswordField('Пароль', validators=[DataRequired(), Length(min=6, max=20)])
     remember_me = BooleanField('Запомнить меня')
     submit = SubmitField('Войти')
+
+
+class CommentForm(FlaskForm):
+    parent_comment_id = HiddenField()
+    content = TextAreaField('Комментарий', validators=[DataRequired(message="Комментарий не может быть пустым.")])
+    submit = SubmitField('Отправить')

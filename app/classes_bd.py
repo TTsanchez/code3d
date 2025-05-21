@@ -20,7 +20,7 @@ class Users(db.Model, UserMixin):
 
     # Связи
     posts = db.relationship('Posts', backref='author', lazy=True)
-    comments = db.relationship('Comment', backref='author', lazy=True)
+    comments = db.relationship('Comments', backref='author', lazy=True)
     sent_messages = db.relationship('PrivateMessage', foreign_keys='PrivateMessage.sender_id', backref='sender',
                                     lazy=True)
     received_messages = db.relationship('PrivateMessage', foreign_keys='PrivateMessage.receiver_id', backref='receiver',
@@ -46,11 +46,11 @@ class Posts(db.Model):
     type_of_work = db.Column(db.String(255))
 
     # Связи
-    comments = db.relationship('Comment', backref='posts', lazy=True, cascade='all, delete-orphan')
+    comments = db.relationship('Comments', backref='posts', lazy=True, cascade='all, delete-orphan')
     likes = db.relationship('PostLike', backref='posts', lazy=True, cascade='all, delete-orphan')
 
 
-class Comment(db.Model):
+class Comments(db.Model):
     __tablename__ = 'comments'
 
     comment_id = db.Column(db.Integer, primary_key=True)
@@ -61,8 +61,9 @@ class Comment(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
 
     # Связи
-    replies = db.relationship('Comment', backref=db.backref('parent', remote_side=[comment_id]), lazy=True)
+    replies = db.relationship('Comments', backref=db.backref('parent', remote_side=[comment_id]), lazy=True)
     likes = db.relationship('CommentLike', backref='comment', lazy=True, cascade='all, delete-orphan')
+    user = db.relationship('Users', backref='user_comments')
 
 
 class PostLike(db.Model):

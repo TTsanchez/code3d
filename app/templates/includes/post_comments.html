@@ -1,0 +1,38 @@
+<div class="comments-section" id="comments-section">
+    <h5>Комментарии ({{ post.comments | length }})</h5>
+    <!-- Сначала форма для нового комментария -->
+    {% if current_user.is_authenticated %}
+    <form action="{{ url_for('add_comment', post_id=post.post_id) }}" method="post" class="mb-3"
+          id="comment-form">
+        {{ form.hidden_tag() }}
+        {{ form.parent_comment_id(value="") }}
+        <div class="mb-2">
+            {{ form.content(class="form-control", rows="2", placeholder="Добавить комментарий...") }}
+        </div>
+        {{ form.submit(class="btn btn-primary btn-sm") }}
+    </form>
+    {% else %}
+    <p><a href="#" onclick="showLoginModal()">Войдите</a>, чтобы оставить комментарий.</p>
+    {% endif %}
+
+    <!-- Теперь сами комментарии -->
+{% for comment in post.comments if not comment.parent_comment_id %}
+    {% set _ = namespace(comment=comment) %}
+    {% include 'includes/comment_block.html' with context %}
+{% endfor %}
+
+    <script>
+        document.querySelectorAll('.reply-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const commentId = this.getAttribute('data-comment-id');
+                document.getElementById('parent_comment_id').value = commentId;
+                window.scrollTo({
+                    top: document.getElementById('comment-form').offsetTop,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+
+
+</div>

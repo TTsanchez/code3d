@@ -1,0 +1,39 @@
+<div class="comment border rounded p-3 my-3 shadow-sm">
+    <!-- Аватар и имя -->
+    <div class="d-flex align-items-center mb-2">
+        <a class="username d-flex align-items-center gap-2 text-decoration-none mb-2"
+           href="/user/{{ comment.user.username }}">
+            <img src="https://i.postimg.cc/m27FcBSf/no-image.png"
+                 alt="Avatar"
+                 width="36" height="36"
+                 class="rounded-circle shadow-sm me-2">
+            <span class="fw-semibold">{{ comment.user.username }}</span>
+        </a>
+    </div>
+
+    <!-- Содержимое -->
+    <div class="mb-2 d-flex">
+        <p class="m-0">{{ comment.content }}</p>
+    </div>
+
+    <!-- Кнопки -->
+    <div class="d-flex justify-content-between align-items-center">
+        <button class="btn btn-sm p-0 reply-btn"
+                data-comment-id="{{ comment.comment_id }}">
+            <span class="nav-link m-0">Ответить</span>
+        </button>
+        <small>{{ comment.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+    </div>
+
+    <!-- Вложенные ответы -->
+    {% if comment.replies %}
+    {% for reply in comment.replies %}
+        {% set comment = reply %}
+        {% include 'includes/comment_block.html' %}
+    {% endfor %}
+{% endif %}
+
+
+
+
+</div>
