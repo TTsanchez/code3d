@@ -39,7 +39,7 @@ form {
     padding: 10px;
 }
 
-.GoButton {
+.GoButton, #DataSort {
     background-color: gray;
     color: white;
     padding: 5px 20px;
@@ -208,7 +208,7 @@ canvas {
     background-color: rgb(128, 128, 128)!important; /* лайк не поставлен */
     border: none;
     cursor: pointer;
-    font-size: 1.2rem;
+    font-size: 0.875rem;;
     color: white;
     padding: 0.3rem 0.6rem;
     border-radius: 0.4rem;
@@ -216,7 +216,7 @@ canvas {
 }
 
 .like-btn.liked {
-    background-color: red!important; /* лайк поставлен */
+    background-color: #00bcd4 !important; /* лайк поставлен */
 }
 
 

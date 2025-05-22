@@ -3,7 +3,7 @@ from datetime import datetime
 from flask import render_template, jsonify, redirect, url_for, flash, request
 from flask_login import current_user, login_manager, login_user, login_required, logout_user, LoginManager
 from flask_wtf.csrf import CSRFError
-from sqlalchemy import desc
+from sqlalchemy import desc, func
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
@@ -41,7 +41,7 @@ def posts():
     if sort_order not in ['asc', 'desc']:
         sort_order = 'desc'
 
-    # Запрос с join между Post и User
+    # Запрос с join между
     posts_query = db.session.query(
         Posts.post_id.label('post_id'),
         Posts.created_at,
@@ -50,8 +50,11 @@ def posts():
         Posts.code3d,
         Posts.technology3d,
         Posts.user_id,
-        Users.username
-    ).join(Users, Posts.user_id == Users.user_id)
+        Users.username,
+        func.count(PostLike.post_id).label('like_count')  # <-- заменили .id на .post_id
+    ).join(Users, Posts.user_id == Users.user_id
+           ).outerjoin(PostLike, Posts.post_id == PostLike.post_id
+                       ).group_by(Posts.post_id, Users.username)
 
     # Сортировка
     if sort_order == 'asc':
@@ -62,9 +65,16 @@ def posts():
     # Получаем все посты
     posts_with_users = posts_query.all()
 
+    if current_user.is_authenticated:
+        liked = PostLike.query.with_entities(PostLike.post_id).filter_by(user_id=current_user.user_id).all()
+        liked_post_ids = {row.post_id for row in liked}
+    else:
+        liked_post_ids = set()
+
     return render_template("posts.html",
                            posts=posts_with_users,
-                           sort=sort_order)
+                           sort=sort_order,
+                           liked_post_ids=liked_post_ids)
 
 
 @app.route('/sort_posts')
@@ -129,7 +139,6 @@ def handle_csrf_error(e):
 @app.route('/profile')
 def profile():
     if current_user.is_authenticated:
-        code_template = render_template('base_post.html')
         return redirect(url_for('user', user_identifier=current_user.username))
     else:
         return render_template("unauthorized.html")
@@ -246,26 +255,36 @@ def user(user_identifier):
                 user = Users.query.filter_by(username=user_identifier).first()
 
             if user:
-                # Получаем все ID постов пользователя
-                user_posts = Posts.query.filter_by(user_id=user.user_id).all()
+                # Запрос на получение всех постов пользователя + username + лайки
+                user_posts_query = db.session.query(
+                    Posts.post_id,
+                    Posts.title,
+                    Posts.content,
+                    Posts.code3d,
+                    Posts.technology3d,
+                    Posts.created_at,
+                    Users.username,
+                    func.count(PostLike.post_id).label('like_count')
+                ).join(Users, Posts.user_id == Users.user_id
+                ).outerjoin(PostLike, Posts.post_id == PostLike.post_id
+                ).filter(Posts.user_id == user.user_id
+                ).group_by(Posts.post_id, Users.username
+                ).order_by(Posts.created_at.desc())
 
-                # Получаем сами посты по ID
-                posts = []
-                for post in user_posts:
-                    # Используем кортеж значений в query.get()
-                    post_data = Posts.query.get(post.post_id)
+                user_posts = user_posts_query.all()
 
-                    # Добавляем дату создания поста к данным
-                    post_data.created_at_formatted = post_data.created_at.strftime('%Y-%m-%d %H:%M:%S')
+                # Обработка лайков
+                if current_user.is_authenticated:
+                    liked = PostLike.query.with_entities(PostLike.post_id).filter_by(user_id=current_user.user_id).all()
+                    liked_post_ids = {row.post_id for row in liked}
+                else:
+                    liked_post_ids = set()
 
-                    posts.append(post_data)
-
-                reversed_posts = posts[::-1]
-                return render_template('profile.html', user=user, posts=reversed_posts)
+                return render_template('profile.html', user=user, posts=user_posts, liked_post_ids=liked_post_ids)
             else:
                 return render_template('404.html')
         except Exception as e:
-            return render_template('500.html', error=e)  # Обработка ошибок базы данных
+            return render_template('500.html', error=e)
     else:
         return render_template("unauthorized.html")
 

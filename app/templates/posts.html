@@ -1,112 +1,17 @@
 {% extends 'base2.html' %}
 
 {% block title %}
-Посты | Code3d.ru
-{% endblock %}
-
-{% block title2 %}
-Посты
+Лента постов
 {% endblock %}
 
 {% block body %}
 <div id="postsContainer">
-    <div class="container py-2">
+    <div class="container p-4 pb-0">
         <!-- Кнопка для изменения порядка сортировки -->
         <button id="DataSort" onclick="toggleSort()">Data ↓↑</button>
         <p>Current Sort Value: {{ sort }}</p>
     </div>
-    <section>
-        {% for post in posts %}
-        <div class="container py-2" id="post-{{ post.post_id }}">
-            <div class="row justify-content-center" class="row">
-                <div>
-                    <div id="delete_post_bttn" data-post-id="{{ post.post_id }}">
-                        <a id="options_post" href="#" class="text-decoration-none"
-                           data-bs-toggle="dropdown" aria-expanded="false">. . .
-                        </a>
-                        <ul class="dropdown-menu text-small" style="">
-                            <li><a data-postid="{{ post.post_id }}" class="dropdown-item share-btn">Поделиться</a></li>
-                            {% if post.user_id == current_user.user_id or current_user.superuser == True %}
-                            <li>
-                                <button onclick='del_post("{{ post.post_id }}")' data-post-id="{{ post.post_id }}"
-                                        class="dropdown-item del_button">Удалить
-                                </button>
-                            </li>
-                            {% endif %}
-                        </ul>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="card mb-4 post-card" data-href="/post/{{ post.post_id }}">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-sm-6">
-                                        <a class="username d-flex align-items-center gap-2 text-decoration-none mb-2"
-                                           href="/user/{{post.username}}">
-                                            <img src="https://i.postimg.cc/m27FcBSf/no-image.png" width="36" height="36"
-                                                 class="rounded-circle shadow-sm">
-                                            <span class="fw-semibold">{{post.username}}</span>
-                                        </a>
-
-                                        <a class="href_post" href="/post/{{post.post_id}}" target="_blank">
-                                            <h4 class="mb-4">{{post.title}}</h4>
-                                        </a>
-
-                                        <pre class="clamp-text" align="justify">
-                    {{ post.content[:340] }}{% if post.content|length > 300 %}...{% endif %}
-                </pre>
-
-                                        <h7 class="mb-4" data-utc-time="{{ post.created_at.isoformat() }}">
-                                            <noscript>{{ post.created_at.strftime('%Y-%m-%d %H:%M:%S') }} (UTC)
-                                            </noscript>
-                                        </h7>
-                                    </div>
-
-                                    <div id="canvas" class="col-sm-6">
-                                        {% if post.technology3d == 'x3dom' %}
-                                        <x3d width="100%" height="100%">
-                                            {{post.code3d|safe}}
-                                        </x3d>
-                                        {% elif post.technology3d == 'verge3d' %}
-                                        <iframe style="min-height: 300px; width: 100%;" allowfullscreen
-                                                src="{{post.code3d|safe}}"></iframe>
-                                        {% elif post.technology3d == 'three.js' %}
-                                        <div id="canvas-container" style="max-height: 300px; width: 100%;">
-                                            <canvas id="three-canvas" style="min-height: 300px; width: 100%;"></canvas>
-                                        </div>
-                                        <script>
-                                            document.addEventListener("DOMContentLoaded", function () {
-                                                const container = document.getElementById("canvas-container");
-                                                const canvas = document.getElementById("three-canvas");
-                                                const code = `{{ post.code3d|safe }}`;
-
-                                                try {
-                                                    const userScript = new Function('canvas', `
-                                const scene = new THREE.Scene();
-                                const camera = new THREE.PerspectiveCamera(75, ${container.offsetWidth} / ${container.offsetHeight}, 0.1, 1000);
-                                const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
-                                renderer.setSize(${container.offsetWidth}, ${container.offsetHeight});
-                                ${code}
-                            `);
-                                                    userScript(canvas);
-                                                } catch (e) {
-                                                    console.error('Ошибка выполнения Three.js кода:', e);
-                                                }
-                                            });
-                                        </script>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </section>
+    {% include "includes/post_cards.html" %}
 </div>
 <script src="https://www.x3dom.org/download/dev/x3dom-full.js"></script>
 <!-- Подключение jQuery  -->
@@ -139,5 +44,5 @@
 <script src="{{ url_for('static', filename='js/del_post.js') }}"></script>
 <script src="{{ url_for('static', filename='js/datetime-utils.js') }}"></script>
 <script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
-
+<script src="../static/js/likePost.js"></script>
 {% endblock %}

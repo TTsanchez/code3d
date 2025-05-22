@@ -110,7 +110,7 @@
 }
 
 
-.controls {
+.controls, .post-actions {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -118,33 +118,19 @@
 }
 
 .controls button {
-    padding: 4px 16px;
     background: #4CAF50;
     color: white;
-    border: none;
-    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.3s;
 }
 
-.post-actions {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-}
-
-.post-actions button {
+.post-actions button, .controls button {
     padding: 4px 12px;
     font-size: 14px;
     border-radius: 8px;
     border: none;
 }
 
-.like-btn {
-    background: #f44336;
-    color: white;
-}
+
 
 .share-btn {
     background: #2196F3;
