@@ -16,6 +16,7 @@
 <!-- CodeMirror JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
+
 {% if post.technology3d == 'x3dom' %}
 <!-- X3DOM -->
 <link rel="stylesheet" href="https://www.x3dom.org/download/x3dom.css">
@@ -29,33 +30,14 @@
 {% endif %}
 
 <center>
-    <!--        <h1>{{post.type_of_work}}</h1>-->
-    <!--        <h2>{{post.title}}</h2>-->
-    <!--        <h3>Студент гр. {{user.group or 'N/A'}} - {{user.last_name}} {{user.first_name[0]}}.{{user.father_name[0]}}.</h3>-->
     {% if post.technology3d == 'x3dom' %}
-    <div class="threejs-header">
-        <h1>{{post.title}}</h1>
-        <h2>{{user.username}}</h2>
-    </div>
-
-    <div class="x3dom-container">
+    <div class="x3dom-container pt-4 ps-3 pe-3">
         <!-- Левая колонка -->
         <div class="preview-section">
             <x3d id="x3d-container" width="100%" height="70vh">
                 {{post.code3d|safe}}
             </x3d>
-
-            <div class="post-actions">
-                <button class="like-btn {% if user_liked %}liked{% endif %}"
-                        data-post-id="{{ post.post_id }}"
-                        onclick="likePost('{{ post.post_id }}')">
-                    ❤️ {{ post.likes|length }}
-                </button>
-                <button class="share-btn">🔗 Поделиться</button>
-                <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
-            </div>
-            <!-- Комментарии -->
-            {% include 'includes/post_comments.html' %}
+            {% include 'includes/post_actions.html' %}
         </div>
 
         <!-- Правая колонка -->
@@ -68,73 +50,26 @@
             </div>
         </div>
     </div>
-
-    <div class="post-description">
-        <h3>Описание проекта</h3>
-        <p>{{post.description}}</p>
-    </div>
+    {% include 'includes/post_comments.html' %}
 
     {% elif post.technology3d == 'verge3d' %}
-    <div class="verge3d-container">
-        <!-- Заголовок и автор -->
-        <div class="threejs-header">
-            <h1>{{ post.title }}</h1>
-            <h2>{{ user.username }}</h2>
-        </div>
-
+    <div class="verge3d-container pt-4 ps-3 pe-3">
         <!-- Просмотр 3D-сцены -->
-        <div class="preview-section-verge">
+        <div class="preview-section">
             <iframe id="Okno" allowfullscreen src="{{ post.code3d|safe }}" width="100%" height="600vh"
                     style="border: none;"></iframe>
-
             <!-- Кнопки действий -->
-            <div class="post-actions">
-                <button class="like-btn {% if user_liked %}liked{% endif %}"
-                        data-post-id="{{ post.post_id }}"
-                        onclick="likePost('{{ post.post_id }}')">
-                    ❤️ {{ post.likes|length }}
-                </button>
-
-                <button class="share-btn">🔗 Поделиться</button>
-                <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
-            </div>
-
-            <!-- Комментарии -->
-            {% include 'includes/post_comments.html' %}
+            {% include 'includes/post_actions.html' %}
         </div>
     </div>
-
-    <!-- Описание проекта -->
-    <div class="post-description">
-        <h3>Описание проекта</h3>
-        <p>{{ post.description }}</p>
-    </div>
-    </div>
+    {% include 'includes/post_comments.html' %}
 
     {% elif post.technology3d == 'three.js' %}
-    <div class="threejs-header">
-        <h1>{{post.title}}</h1>
-        <h2>{{user.username}}</h2>
-    </div>
-
-    <div class="threejs-container">
+    <div class="threejs-container pt-4 ps-3 pe-3">
         <!-- Левая колонка -->
         <div class="preview-section">
             <div id="canvas-container"></div>
-
-            <div class="post-actions">
-                <button class="like-btn {% if user_liked %}liked{% endif %}"
-                        data-post-id="{{ post.post_id }}"
-                        onclick="likePost('{{ post.post_id }}')">
-                    ❤️ {{ post.likes|length }}
-                </button>
-
-                <button class="share-btn">🔗 Поделиться</button>
-                <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
-            </div>
-
-            <!-- Комментарии -->
-            {% include 'includes/post_comments.html' %}
+            {% include 'includes/post_actions.html' %}
         </div>
 
         <!-- Правая колонка -->
@@ -147,19 +82,16 @@
             </div>
         </div>
     </div>
-
-    <div class="post-description">
-        <h3>Описание проекта</h3>
-        <p>{{post.description}}</p>
-    </div>
+    {% include 'includes/post_comments.html' %}
     {% endif %}
-
 </center>
-<div>
+
+<div class="p-2">
+    <div>
+        <h1>{{post.title}}</h1>
+    </div>
     <pre id="content">{{post.content}}</pre>
 </div>
-
-
 
 
 <script src="../static/js/toggleComments.js"></script>

@@ -1,0 +1,19 @@
+<div class="post-actions d-flex align-items-center">
+    <!-- Кнопки (остаются слева) -->
+    <button class="like-btn {% if user_liked %}liked{% endif %}"
+            data-post-id="{{ post.post_id }}"
+            onclick="likePost('{{ post.post_id }}')">
+        ❤️ {{ post.likes|length }}
+    </button>
+    <button class="share-btn">
+        <span class="icon">🔗</span>
+        <span class="text d-none d-md-inline">Поделиться</span>
+    </button>
+    <button class="comments-btn" onclick="toggleComments()">💬 Комментарии</button>
+
+    <!-- username прижат к правому краю -->
+    <a class="username d-flex align-items-center gap-2 text-decoration-none ms-auto pe-3"
+       href="/user/{{ user.username }}">
+        <span class="fw-semibold">{{ user.username }}</span>
+    </a>
+</div>
