@@ -6,6 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 e.target.closest('a') ||
                 e.target.closest('button') ||
                 e.target.tagName === 'X3D' ||
+                e.target.className === 'post-actions' ||
+                e.target.className === 'like-btn' ||
                 e.target.tagName === 'IFRAME' ||
                 e.target.tagName === 'CANVAS'
             ) {

@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
       code3dField.placeholder = 'Вставте ссылку на проект';
     }
     else if (technology3dValue === 'three.js'){
-      code3dField.placeholder = 'SUAI-3D Is Not A Place For Ballooning';
+      code3dField.placeholder = 'Код three.js';
     }
     else {
       code3dField.placeholder = '';

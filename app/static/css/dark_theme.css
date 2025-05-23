@@ -44,7 +44,7 @@ p,pre,h1,h2,h3,h4,h5,h6,h7,a,label,loginModalLabel,small, button{
     border-width: 1px;
 }
 
-.card, .container_reg {
+.card, .container_reg,.container_authorization {
     background-color: #383f48;
     position: relative;
 }
@@ -67,7 +67,7 @@ p,pre,h1,h2,h3,h4,h5,h6,h7,a,label,loginModalLabel,small, button{
     background-color: #00bcd4;
 }
 
-.container_reg {
+.container_reg,.container_authorization {
     border-color: #00bcd4;
 }
 

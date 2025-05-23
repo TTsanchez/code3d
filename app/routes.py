@@ -20,14 +20,6 @@ def load_user(user_id):
     return Users.query.get(user_id)
 
 
-# Настроил с Cloudflare
-# @app.before_request
-# def redirect_www_to_non_www():
-#     """Перенаправляет www.code3d.ru → code3d.ru"""
-#     if request.host.startswith('www.'):
-#         return redirect(request.url.replace('www.', '', 1), code=301)
-
-
 @app.route('/')
 @app.route('/home')
 def index():
@@ -202,27 +194,40 @@ def newpost():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        # Проверка занятости логина
-        if check_username_exists(form.username.data):
-            flash('Логин занят', 'name')
-            return render_template('register.html', title='Register', form=form)
-        # Проверка занятости почты
+        # Проверка уникальности никнейма
+        if Users.query.filter_by(username=form.username.data).first():
+            form.username.errors.append('Этот никнейм уже занят')
+            return render_template('register.html', form=form)
+
+        # Проверка уникальности email
         if Users.query.filter_by(email=form.email.data).first():
-            flash('Почта уже зарегистрирована', 'email')
-            return render_template('register.html', title='Register', form=form)
-        # Проверка совпадения паролей
-        if form.password.data != form.confirm_password.data:
-            flash('Пароли не совпадают', 'password')
-            return render_template('register.html', title='Register', form=form)
+            form.email.errors.append('Этот email уже зарегистрирован')
+            return render_template('register.html', form=form)
+
+        # Создание пользователя
         hashed_password = generate_password_hash(form.password.data)
-        user = Users(username=form.username.data, first_name=form.first_name.data, last_name=form.last_name.data,
-                     father_name=form.father_name.data, email=form.email.data,
-                     gender=form.gender.data, password_hash=hashed_password, created_at=datetime.utcnow())
-        db.session.add(user)
-        db.session.commit()
-        flash('Успешная регистрация', 'done')
-        return render_template('register.html', title='Register', form=form)
-    return render_template('register.html', title='Register', form=form)
+        user = Users(
+            username=form.username.data,
+            first_name=form.first_name.data,
+            last_name=form.last_name.data,
+            father_name=form.father_name.data,
+            email=form.email.data,
+            gender=form.gender.data,
+            password_hash=hashed_password,
+            created_at=datetime.utcnow()
+        )
+
+        try:
+            db.session.add(user)
+            db.session.commit()
+            flash('Регистрация прошла успешно!', 'success')
+            return redirect(url_for('login'))
+        except Exception as e:
+            db.session.rollback()
+            flash('Ошибка при регистрации', 'error')
+            app.logger.error(f'Registration error: {str(e)}')
+
+    return render_template('register.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])

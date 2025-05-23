@@ -24,7 +24,6 @@ CREATE TABLE IF NOT EXISTS public.posts (
     title VARCHAR(255) NOT NULL,
     content TEXT,
     code3d TEXT NOT NULL,
-    type_of_work VARCHAR(255),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
