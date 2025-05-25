@@ -63,7 +63,7 @@ class Comments(db.Model):
     # Связи
     replies = db.relationship('Comments', backref=db.backref('parent', remote_side=[comment_id]), lazy=True)
     likes = db.relationship('CommentLike', backref='comment', lazy=True, cascade='all, delete-orphan')
-    user = db.relationship('Users', backref='user_comments')
+    # user = db.relationship('Users', backref='user_comments')
 
 
 class PostLike(db.Model):

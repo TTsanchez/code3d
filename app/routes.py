@@ -1,4 +1,5 @@
 import datetime
+import traceback
 from datetime import datetime
 from flask import render_template, jsonify, redirect, url_for, flash, request
 from flask_login import current_user, login_manager, login_user, login_required, logout_user, LoginManager
@@ -425,22 +426,32 @@ def inbox():
 
 
 @app.route('/dialogs')
+@login_required
 def dialogs():
-    if current_user.is_authenticated:
-        try:
-            # Получить всех собеседников текущего пользователя
-            subq1 = db.session.query(PrivateMessage.sender_id.label('user_id')).filter(
-                PrivateMessage.receiver_id == current_user.user_id)
-            subq2 = db.session.query(PrivateMessage.receiver_id.label('user_id')).filter(
-                PrivateMessage.sender_id == current_user.user_id)
-            union = subq1.union(subq2).subquery()
+    try:
+        # Собеседники — все пользователи, с кем были переписки (в обе стороны)
+        subq1 = db.session.query(PrivateMessage.sender_id.label('user_id')).filter(
+            PrivateMessage.receiver_id == current_user.user_id)
+        subq2 = db.session.query(PrivateMessage.receiver_id.label('user_id')).filter(
+            PrivateMessage.sender_id == current_user.user_id)
+        union_subq = subq1.union(subq2).subquery()
 
-            interlocutors = db.session.query(Users).filter(Users.user_id.in_(union)).all()
-            return render_template('dialogs.html', interlocutors=interlocutors)
-        except Exception as e:
-            return render_template('500.html', error=e)
-    else:
-        return render_template("unauthorized.html")
+        # Получаем пользователей из union-подзапроса + время последнего сообщения с ними
+        interlocutors = (
+            db.session.query(Users, func.max(PrivateMessage.created_at).label('last_message_time'))
+            .join(union_subq, Users.user_id == union_subq.c.user_id)
+            .join(PrivateMessage, ((PrivateMessage.sender_id == Users.user_id) &
+                                   (PrivateMessage.receiver_id == current_user.user_id)) |
+                  ((PrivateMessage.receiver_id == Users.user_id) & (PrivateMessage.sender_id == current_user.user_id)))
+            .group_by(Users.user_id).order_by(desc('last_message_time')).all()
+        )
+        return render_template('dialogs.html', interlocutors=interlocutors)
+
+    except Exception as e:
+        print("Ошибка в /dialogs:", e)
+        traceback.print_exc()
+        return render_template('500.html', error=e)
+
 
 
 @app.route('/dialog/<int:user_id>', methods=['GET', 'POST'])
