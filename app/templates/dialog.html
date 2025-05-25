@@ -1,0 +1,91 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Диалог с {{ partner.username }}
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+<h2>Диалог с <a href="/user/{{partner.username}}">{{ partner.username }}</a></h2>
+    <div id="messages-container" class="messages-box border p-3 mb-3 mt-3" style="height: 400px; overflow-y: scroll;">
+        <!-- Сообщения подгружаются сюда через JS -->
+    </div>
+
+    <form method="POST" class="d-flex" id="message-form">
+        {{ form.hidden_tag() }}
+        {{ form.message(class="form-control me-2", placeholder="Введите сообщение") }}
+        <button type="submit" class="btn btn-send">Отправить</button>
+    </form>
+</div>
+
+<script src="{{ url_for('static', filename='js/datetime-utils.js') }}"></script>
+<script>
+    const partnerId = {{ partner.user_id }}
+    ;
+    const currentUserId = {{ current_user.user_id }}
+    ;
+    const messagesContainer = document.getElementById('messages-container');
+
+    function fetchMessages() {
+    fetch(`/api/dialog/${partnerId}/messages`)
+        .then(response => response.json())
+        .then(data => {
+            messagesContainer.innerHTML = ''; // очистить контейнер
+
+            data.messages.forEach(msg => {
+                const div = document.createElement('div');
+                div.className = (msg.sender_id === currentUserId) ? 'text-end' : 'text-start';
+
+                const innerDiv = document.createElement('div');
+                innerDiv.className = 'd-inline-block p-2 rounded mt-1 ' +
+                    (msg.sender_id === currentUserId ? 'my-message text-white' : 'bg-light');
+
+                innerDiv.innerHTML = `${msg.content}<br><small class="text-muted" data-utc-time="${msg.created_at}"></small>`;
+
+                div.appendChild(innerDiv);
+                messagesContainer.appendChild(div);
+            });
+
+            // Запускаем твою функцию форматирования времени из datetime-utils.js
+            document.querySelectorAll('[data-utc-time]').forEach(el => {
+                formatUTCDateTime(el.dataset.utcTime, el);
+            });
+        })
+        .catch(console.error);
+}
+
+
+
+    // Запрашиваем сообщения каждые 3 секунды
+    setInterval(fetchMessages, 3000);
+
+    // Подгружаем сразу при загрузке страницы
+    fetchMessages();
+
+    // --- Опционально: отправка формы через AJAX без перезагрузки ---
+    const form = document.getElementById('message-form');
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const messageInput = form.querySelector('input[name="message"]');
+
+        fetch(form.action || window.location.pathname, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRFToken': form.querySelector('input[name="csrf_token"]').value
+            },
+            body: new URLSearchParams({message: messageInput.value})
+        })
+            .then(response => {
+                if (response.ok) {
+                    messageInput.value = '';
+                    fetchMessages(); // обновить сообщения сразу после отправки
+                } else {
+                    console.error('Ошибка при отправке сообщения');
+                }
+            })
+            .catch(console.error);
+    });
+</script>
+<script src="{{ url_for('static', filename='js/datetime-utils.js') }}"></script>
+{% endblock %}

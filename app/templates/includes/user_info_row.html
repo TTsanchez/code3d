@@ -4,6 +4,11 @@
         <p class="mb-0">{{ label }}</p>
     </div>
     <div class="col-sm-9">
-        <p class="mb-0">{{ value }}</p>
+        {% if label == "Дата регистрации" %}
+            <small data-utc-time="{{ value }}"></small>
+        {% else %}
+            <p class="mb-0">{{ value }}</p>
+        {% endif %}
     </div>
 </div>
+

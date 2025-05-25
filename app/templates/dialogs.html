@@ -1,0 +1,22 @@
+{% extends 'base2.html' %}
+
+{% block title %}
+Диалоги
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2>Диалоги</h2>
+    <ul class="list-group d-flex flex-column gap-2 modal-content mt-3">
+        {% for user in interlocutors %}
+        <li class="list-group-item d-flex justify-content-between align-items-center users-msg-list">
+            <a href="{{ url_for('dialog', user_id=user.user_id) }}">
+                {{ user.username }}
+            </a>
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+{% endblock %}

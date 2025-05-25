@@ -60,6 +60,8 @@
                              class="rounded-circle img-fluid" style="width: 150px;">
                         <h5 class="my-3">{{ user.username}}</h5>
                         <p class="mb-1">{{ user.first_name + ' ' + user.last_name }}</p>
+                        <a href="{{ url_for('dialog', user_id=user.user_id) }}">Отправить сообщение 💬</a><br>
+
                         <a id="info_user_button" class="mb-4">Подробнее</a>
                         <!--
 
@@ -91,7 +93,7 @@
                         {% include 'includes/user_info_row.html' %}
 
                         {% set label = "Дата регистрации" %}
-                        {% set value = user.created_at.strftime('%Y-%m-%d %H:%M:%S') %}
+                        {% set value = user.created_at.isoformat() %}
                         {% include 'includes/user_info_row.html' %}
                     </div>
                 </div>

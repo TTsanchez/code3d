@@ -81,3 +81,6 @@ class CommentForm(FlaskForm):
     parent_comment_id = HiddenField()
     content = TextAreaField('Комментарий', validators=[DataRequired(message="Комментарий не может быть пустым.")])
     submit = SubmitField('Отправить')
+
+class MessageForm(FlaskForm):
+    message = StringField('Message', validators=[DataRequired()])

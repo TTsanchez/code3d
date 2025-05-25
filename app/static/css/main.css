@@ -227,12 +227,12 @@ textarea {
     font-size: 1rem;
 }
 
-.btn-registration {
+.btn-registration, .btn-send {
     background-color: #00bcd4 !important;
     transition: 0.3s;
 }
 
-.btn-registration:hover {
+.btn-registration:hover, .btn-send:hover {
     background-color: #02cee8 !important;
     color: #212529 !important;
     transition: 0.3s;
@@ -283,6 +283,30 @@ canvas {
     background-color: #00bcd4 !important; /* лайк поставлен */
 }
 
+.users-msg-list {
+    background-color: #383f48!important;
+    border-color: #00bcd4;
+    border-radius: 8px!important;
+}
 
+.users-msg-list + .users-msg-list {
+  border-top: 1px solid #00bcd4;
+}
 
+.my-message{
+    background-color: #00bcd4;
+}
 
+.flash{
+    color: red;
+}
+
+#messages-container {
+    background-color: #383f48;
+    border-radius: 8px;
+    border-width: 3px!important;
+    border-color: #151b23!important;
+    overflow-y: auto; /* важно */
+    scrollbar-width: thin; /* для Firefox */
+    scrollbar-color: #00bcd4 #151b23; /* для Firefox */
+}

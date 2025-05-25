@@ -8,11 +8,31 @@ from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 from app import app, db
-from app.classes_bd import Posts, Users, PostLike, Comments, CommentLike
-from app.forms import CreatePostForm, RegistrationForm, AuthorizationForm, CommentForm
+from app.classes_bd import Posts, Users, PostLike, Comments, CommentLike, PrivateMessage
+from app.forms import CreatePostForm, RegistrationForm, AuthorizationForm, CommentForm, MessageForm
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
+# Перенаправление неавторизованных пользователей
+login_manager.login_view = 'unauthorized'
+
+@app.route('/unauthorized')
+def unauthorized():
+    return render_template('unauthorized.html')
+
+@app.errorhandler(500)
+def internal_server_error(error):
+    return render_template('500.html'), 500
+
+@app.errorhandler(404)
+def internal_server_error(error):
+    return render_template('404.html'), 404
+
+@app.errorhandler(400)
+def internal_server_error(error):
+    return render_template('400.html'), 400
 
 
 @login_manager.user_loader
@@ -76,11 +96,9 @@ def sort_posts():
 
 
 @app.route('/forum')
+@login_required
 def forum():
-    if current_user.is_authenticated:
-        return render_template("forum.html")
-    else:
-        return render_template("unauthorized.html")
+    return render_template("forum.html")
 
 
 @app.route('/post/<int:post_id>')
@@ -398,3 +416,71 @@ def add_comment(post_id):
     flash('Ошибка в форме комментария.', 'danger')
     return redirect(url_for('post', post_id=post_id))
 
+
+@app.route('/messages')
+@login_required
+def inbox():
+    messages = PrivateMessage.query.filter_by(receiver_id=current_user.user_id).order_by(PrivateMessage.created_at.desc()).all()
+    return render_template('inbox.html', messages=messages)
+
+
+@app.route('/dialogs')
+def dialogs():
+    if current_user.is_authenticated:
+        try:
+            # Получить всех собеседников текущего пользователя
+            subq1 = db.session.query(PrivateMessage.sender_id.label('user_id')).filter(
+                PrivateMessage.receiver_id == current_user.user_id)
+            subq2 = db.session.query(PrivateMessage.receiver_id.label('user_id')).filter(
+                PrivateMessage.sender_id == current_user.user_id)
+            union = subq1.union(subq2).subquery()
+
+            interlocutors = db.session.query(Users).filter(Users.user_id.in_(union)).all()
+            return render_template('dialogs.html', interlocutors=interlocutors)
+        except Exception as e:
+            return render_template('500.html', error=e)
+    else:
+        return render_template("unauthorized.html")
+
+
+@app.route('/dialog/<int:user_id>', methods=['GET', 'POST'])
+@login_required
+def dialog(user_id):
+    partner = Users.query.get_or_404(user_id)
+    form = MessageForm()
+
+    if form.validate_on_submit():
+        new_msg = PrivateMessage(
+            sender_id=current_user.user_id,
+            receiver_id=partner.user_id,
+            content=form.message.data
+        )
+        db.session.add(new_msg)
+        db.session.commit()
+        return redirect(url_for('dialog', user_id=user_id))
+
+    # Получаем все сообщения между текущим пользователем и партнером
+    messages = PrivateMessage.query.filter(
+        ((PrivateMessage.sender_id == current_user.user_id) & (PrivateMessage.receiver_id == partner.user_id)) |
+        ((PrivateMessage.sender_id == partner.user_id) & (PrivateMessage.receiver_id == current_user.user_id))
+    ).order_by(PrivateMessage.created_at.asc()).all()
+
+    return render_template('dialog.html', partner=partner, messages=messages, form=form)
+
+
+@app.route('/api/dialog/<int:user_id>/messages')
+@login_required
+def get_messages_api(user_id):
+    partner = Users.query.get_or_404(user_id)
+    messages = PrivateMessage.query.filter(
+        ((PrivateMessage.sender_id == current_user.user_id) & (PrivateMessage.receiver_id == partner.user_id)) |
+        ((PrivateMessage.sender_id == partner.user_id) & (PrivateMessage.receiver_id == current_user.user_id))
+    ).order_by(PrivateMessage.created_at.asc()).all()
+
+    messages_data = [{
+        'sender_id': msg.sender_id,
+        'content': msg.content,
+        'created_at': msg.created_at.strftime('%Y-%m-%d %H:%M')
+    } for msg in messages]
+
+    return jsonify({'messages': messages_data})
