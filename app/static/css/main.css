@@ -166,7 +166,6 @@ textarea {
 }
 
 #delete_post_bttn {
-    width: 20px;
     float: right;
     margin-bottom: 5px;
 }
@@ -309,4 +308,8 @@ canvas {
     overflow-y: auto; /* важно */
     scrollbar-width: thin; /* для Firefox */
     scrollbar-color: #00bcd4 #151b23; /* для Firefox */
+}
+
+.x3dom-progress{
+    visibility: hidden;
 }
