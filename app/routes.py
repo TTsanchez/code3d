@@ -15,21 +15,24 @@ from app.forms import CreatePostForm, RegistrationForm, AuthorizationForm, Comme
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-
 # Перенаправление неавторизованных пользователей
 login_manager.login_view = 'unauthorized'
+
 
 @app.route('/unauthorized')
 def unauthorized():
     return render_template('unauthorized.html')
 
+
 @app.errorhandler(500)
 def internal_server_error(error):
     return render_template('500.html'), 500
 
+
 @app.errorhandler(404)
 def internal_server_error(error):
     return render_template('404.html'), 404
+
 
 @app.errorhandler(400)
 def internal_server_error(error):
@@ -44,7 +47,29 @@ def load_user(user_id):
 @app.route('/')
 @app.route('/home')
 def index():
-    return render_template("index.html")
+    posts = (
+        db.session.query(Posts, Users.username, func.count(PostLike.post_id).label('like_count'))
+        .join(Users, Users.user_id == Posts.user_id)
+        .outerjoin(PostLike, Posts.post_id == PostLike.post_id)
+        .group_by(Posts.post_id, Users.username)
+        .order_by(func.count(PostLike.post_id).desc())
+        .limit(3)
+        .all()
+    )
+
+    processed_posts = []
+    for post, username, like_count in posts:
+        post.username = username
+        post.like_count = like_count
+        processed_posts.append(post)
+
+    # Получим id постов, которые лайкнул текущий пользователь
+    liked_post_ids = []
+    if current_user.is_authenticated:
+        liked = db.session.query(PostLike.post_id).filter_by(user_id=current_user.user_id).all()
+        liked_post_ids = [post_id for (post_id,) in liked]
+
+    return render_template("index.html", posts=processed_posts, liked_post_ids=liked_post_ids)
 
 
 @app.route('/posts')
@@ -125,7 +150,7 @@ def post(post_id):
 
         # Подгружаем комментарии
         comments = Comments.query.filter_by(post_id=post_id, parent_comment_id=None).order_by(
-                Comments.created_at).all()
+            Comments.created_at).all()
 
         return render_template("post.html", post=post, user=user,
                                liked_post_ids=liked_post_ids,
@@ -290,10 +315,10 @@ def user(user_identifier):
                     Users.username,
                     func.count(PostLike.post_id).label('like_count')
                 ).join(Users, Posts.user_id == Users.user_id
-                ).outerjoin(PostLike, Posts.post_id == PostLike.post_id
-                ).filter(Posts.user_id == user.user_id
-                ).group_by(Posts.post_id, Users.username
-                ).order_by(Posts.created_at.desc())
+                       ).outerjoin(PostLike, Posts.post_id == PostLike.post_id
+                                   ).filter(Posts.user_id == user.user_id
+                                            ).group_by(Posts.post_id, Users.username
+                                                       ).order_by(Posts.created_at.desc())
 
                 user_posts = user_posts_query.all()
 
@@ -418,13 +443,6 @@ def add_comment(post_id):
     return redirect(url_for('post', post_id=post_id))
 
 
-@app.route('/messages')
-@login_required
-def inbox():
-    messages = PrivateMessage.query.filter_by(receiver_id=current_user.user_id).order_by(PrivateMessage.created_at.desc()).all()
-    return render_template('inbox.html', messages=messages)
-
-
 @app.route('/dialogs')
 @login_required
 def dialogs():
@@ -451,7 +469,6 @@ def dialogs():
         print("Ошибка в /dialogs:", e)
         traceback.print_exc()
         return render_template('500.html', error=e)
-
 
 
 @app.route('/dialog/<int:user_id>', methods=['GET', 'POST'])

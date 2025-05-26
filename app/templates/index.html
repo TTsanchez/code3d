@@ -1,87 +1,51 @@
 {% extends 'base2.html' %}
 
-{% block title %}
-Главная страница
-{% endblock %}
-
-{% block title2 %}
-Главная страница
-{% endblock %}
+{% block title %}Главная страница{% endblock %}
+{% block title2 %}Главная страница{% endblock %}
 
 {% block body %}
 
 <!-- Hero-секция -->
-<section class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-20 text-center">
+<section class="bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-20 text-center mt-3">
   <h1 class="text-5xl font-bold mb-4">Твори в 3D. Делись. Вдохновляй.</h1>
   <p class="text-xl mb-6">Создавай интерактивные сцены на Three.js и X3DOM, прямо в браузере</p>
-  <a href="{{ url_for('newpost') }}" class="text-blue-700 px-6 py-3 rounded-full font-semibold shadow-md hover:bg-gray-100 transition">Создать проект</a>
+  <button onclick="window.location.href='{{ url_for('newpost') }}'" class="btn btn-send">Создать проект</button>
 </section>
 
-<!--&lt;!&ndash; Галерея работ &ndash;&gt;-->
-<!--<section class="py-16 px-4 max-w-7xl mx-auto">-->
-<!--  <h2 class="text-3xl font-bold mb-8">Популярные проекты</h2>-->
-<!--  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">-->
-<!--    {% for post in posts %}-->
-<!--    <div class="rounded-lg shadow hover:shadow-lg transition">-->
-<!--      <a href="{{ url_for('view_post', post_id=post.id) }}">-->
-<!--        <img src="{{ post.thumbnail_url or url_for('static', filename='img/placeholder.png') }}" class="w-full h-48 object-cover rounded-t-lg" alt="Превью проекта">-->
-<!--        <div class="p-4">-->
-<!--          <h3 class="text-lg font-semibold">{{ post.title }}</h3>-->
-<!--          <div class="flex items-center mt-2 text-sm text-gray-600">-->
-<!--            <img src="{{ post.author_avatar_url or url_for('static', filename='img/default-avatar.png') }}" class="w-6 h-6 rounded-full mr-2">-->
-<!--            {{ post.author }}-->
-<!--          </div>-->
-<!--          <div class="flex justify-between items-center mt-2 text-sm text-gray-500">-->
-<!--            <span>❤️ {{ post.likes_count }}</span>-->
-<!--            <span>💬 {{ post.comments_count }}</span>-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </a>-->
-<!--    </div>-->
-<!--    {% else %}-->
-<!--      <p class="col-span-3 text-gray-500 text-center">Пока нет проектов. Будь первым!</p>-->
-<!--    {% endfor %}-->
-<!--  </div>-->
-<!--</section>-->
+<!-- Популярные посты -->
+<section class="py-16 px-4 max-w-7xl mx-auto">
+  <h2 class="text-3xl font-bold mb-8 mt-3 container">Популярные проекты</h2>
 
-<!--&lt;!&ndash; Мини-песочница &ndash;&gt;-->
-<!--<section class="py-16">-->
-<!--  <div class="max-w-5xl mx-auto px-4">-->
-<!--    <h2 class="text-2xl font-bold mb-4 text-center">Попробуй прямо сейчас</h2>-->
-<!--    <div class="grid md:grid-cols-2 gap-8">-->
+  {% if posts %}
+    {% include "includes/post_cards.html" %}
+  {% else %}
+    <p class="text-gray-500 text-center">Пока нет проектов. Будь первым!</p>
+  {% endif %}
+</section>
 
-<!--      <div id="quick-canvas-container" class="bg-gray-200 h-64 rounded"></div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</section>-->
+<!-- Мини-песочница -->
+<section class="py-16">
+  <div class="max-w-5xl mx-auto px-4">
+    <h2 class="text-2xl font-bold mb-4 text-center">Попробуй прямо сейчас</h2>
+    <div class="grid md:grid-cols-2 gap-8">
+      <div id="quick-canvas-container" class="bg-gray-200 h-64 rounded"></div>
+    </div>
+  </div>
+</section>
 
-<!--&lt;!&ndash; Скрипт &ndash;&gt;-->
-<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>-->
-<!--<script>-->
-<!--function runQuickDemo() {-->
-<!--  const code = document.getElementById('quick-editor').value;-->
-<!--  const container = document.getElementById('quick-canvas-container');-->
-<!--  container.innerHTML = '';-->
-<!--  const canvas = document.createElement('canvas');-->
-<!--  canvas.className = 'w-full h-full';-->
-<!--  container.appendChild(canvas);-->
+<!-- Скрипт -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r148/three.min.js"></script>
+<script src="https://www.x3dom.org/download/dev/x3dom-full.js"></script>
+<!-- Подключение jQuery  -->
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<!--Копирование ссылки на пост-->
+<script src="{{ url_for('static', filename='js/copy_post.js') }}"></script>
+<script src="{{ url_for('static', filename='js/show_flash_message.js') }}"></script>
 
-<!--  try {-->
-<!--    const userScript = new Function('canvas', `-->
-<!--      const scene = new THREE.Scene();-->
-<!--      const camera = new THREE.PerspectiveCamera(75, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);-->
-<!--      const renderer = new THREE.WebGLRenderer({ canvas: canvas });-->
-<!--      renderer.setSize(canvas.clientWidth, canvas.clientHeight);-->
-<!--      ${code}-->
-<!--    `);-->
-<!--    userScript(canvas);-->
-<!--    document.getElementById('quick-output').textContent = '✓ Код выполнен';-->
-<!--    document.getElementById('quick-output').style.color = 'green';-->
-<!--  } catch (e) {-->
-<!--    document.getElementById('quick-output').textContent = '✗ Ошибка: ' + e.message;-->
-<!--    document.getElementById('quick-output').style.color = 'red';-->
-<!--  }-->
-<!--}-->
-<!--</script>-->
+<script src="{{ url_for('static', filename='js/postCardRedirect.js') }}"></script>
+
+<script src="{{ url_for('static', filename='js/datetime-utils.js') }}"></script>
+<script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
+<script src="../static/js/likePost.js"></script>
 
 {% endblock %}
