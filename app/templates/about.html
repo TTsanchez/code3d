@@ -4,10 +4,16 @@
 О нас
 {% endblock %}
 
-{% block title2 %}
-О нас
-{% endblock %}
-
 {% block body %}
-
+<div class="container mt-4">
+    <h2 class="text-center">Разработчик - Красиков А.И.</h2>
+    <h2 class="text-center">Студент группы 4143</h2>
+    <div class="d-flex justify-content-center">
+        <pre style="font-size: 1px; line-height: 1; margin: 0; padding: 10px;
+            letter-spacing: 0; font-family: monospace;
+            background: #151b23; border: 1px solid #00bcd4; border-radius: 10rem">
+            {% include "includes/my_photo.txt" %}
+        </pre>
+    </div>
+</div>
 {% endblock %}

@@ -44,7 +44,6 @@ class Posts(db.Model):
     title = db.Column(db.String(255), nullable=False)
     content = db.Column(db.Text)
     code3d = db.Column(db.Text, nullable=False)
-    type_of_work = db.Column(db.String(255))
 
     # Связи
     comments = db.relationship('Comments', backref='posts', lazy=True, cascade='all, delete-orphan')

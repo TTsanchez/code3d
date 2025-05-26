@@ -14,6 +14,7 @@
     {% include "includes/post_cards.html" %}
 </div>
 <script src="https://www.x3dom.org/download/dev/x3dom-full.js"></script>
+<link rel="stylesheet" type="text/css" href="https://www.x3dom.org/download/x3dom.css">
 <!-- Подключение jQuery  -->
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 <!-- скрипт для смены сортировки постов по дате -->
@@ -43,6 +44,8 @@
 <!--Удаление поста-->
 <script src="{{ url_for('static', filename='js/del_post.js') }}"></script>
 <script src="{{ url_for('static', filename='js/datetime-utils.js') }}"></script>
-<script src="https://unpkg.com/three@0.157.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
 <script src="../static/js/likePost.js"></script>
 {% endblock %}

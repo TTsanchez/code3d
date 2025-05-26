@@ -15,17 +15,18 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material.min.css">
 <!-- CodeMirror JS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
 
 {% if post.technology3d == 'x3dom' %}
 <!-- X3DOM -->
-<link rel="stylesheet" href="https://www.x3dom.org/download/x3dom.css">
-<script src="https://www.x3dom.org/download/x3dom.js"></script>
 <script src="https://www.x3dom.org/download/dev/x3dom-full.js"></script>
+<link rel="stylesheet" type="text/css" href="https://www.x3dom.org/download/x3dom.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js"></script>
 <script src="../static/js/x3d_run_code.js"></script>
 {% elif post.technology3d == 'three.js' %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/javascript/javascript.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.158.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.132.2/examples/js/loaders/GLTFLoader.js"></script>
 <script src="../static/js/3js_run_code.js"></script>
 {% endif %}
 

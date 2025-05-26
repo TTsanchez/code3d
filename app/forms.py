@@ -5,7 +5,6 @@ from wtforms.validators import DataRequired, Length, Optional, EqualTo, Email, R
 
 
 class CreatePostForm(FlaskForm):
-    type_of_work = TextAreaField('Тип работы', validators=[Optional()])
     title = TextAreaField('Заголовок', validators=[DataRequired()])
     content = TextAreaField('Текст', validators=[DataRequired()])
     technology3d = SelectField('', choices=[('', ''),('x3dom', 'X3DOM'), ('verge3d', 'VERGE3D'), ('three.js', 'Three.js')],

@@ -256,7 +256,6 @@ def newpost():
                 content=form.content.data,
                 code3d=code3d_value,
                 technology3d=form.technology3d.data,
-                type_of_work=form.type_of_work.data,
                 user_id=user.user_id,  # Указываем текущего пользователя
                 created_at=datetime.utcnow()
             )

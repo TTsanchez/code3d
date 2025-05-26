@@ -321,7 +321,7 @@ canvas {
 }
 
 .comment {
-    background-color: #2a313c;
+    background-color: rgba(42, 49, 60, 0.9);
     margin-left: 20px;
 }
 
