@@ -8,12 +8,46 @@
 <div class="container mt-4">
     <h2 class="text-center">Разработчик - Красиков А.И.</h2>
     <h2 class="text-center">Студент группы 4143</h2>
-    <div class="d-flex justify-content-center">
-        <pre style="font-size: 1px; line-height: 1; margin: 0; padding: 10px;
+     <div class="ascii-container position-absolute start-50 translate-middle-x mt-3"
+         style="transform: translateX(-50%)"
+         data-default="{% include 'includes/my_photo.txt' %}"
+         data-hover="{% include 'includes/my_photo_alt.txt' %}">
+        <pre class="ascii-art" style="font-size: 1px; line-height: 1; margin: 0; padding: 10px;
             letter-spacing: 0; font-family: monospace;
-            background: #151b23; border: 1px solid #00bcd4; border-radius: 10rem">
+            background: #151b23; border: 1px solid #00bcd4; border-radius: 10rem;
+            transition: opacity 0.3s ease;">
             {% include "includes/my_photo.txt" %}
         </pre>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const container = document.querySelector('.ascii-container');
+    const asciiArt = container.querySelector('.ascii-art');
+
+    // Предотвращаем дублирование данных
+    if (!asciiArt.dataset.initialized) {
+        asciiArt.dataset.default = container.dataset.default;
+        asciiArt.dataset.hover = container.dataset.hover;
+        asciiArt.dataset.initialized = true;
+    }
+
+    container.addEventListener('mouseenter', function() {
+        asciiArt.style.opacity = '0';
+        setTimeout(() => {
+            asciiArt.textContent = this.dataset.hover;
+            asciiArt.style.opacity = '1';
+        }, 150);
+    });
+
+    container.addEventListener('mouseleave', function() {
+        asciiArt.style.opacity = '0';
+        setTimeout(() => {
+            asciiArt.textContent = this.dataset.default;
+            asciiArt.style.opacity = '1';
+        }, 150);
+    });
+});
+</script>
 {% endblock %}

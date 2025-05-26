@@ -26,7 +26,7 @@
 
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     <header class="p-3">
     <div id="main-content" class="container">
       <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -74,7 +74,9 @@
 <!--        <h1 class="title_name">{% block title2 %}{% endblock %}</h1>-->
 <!--      </div>-->
 <!--    </div>-->
-    {% block body %}{% endblock %}
+    <div class="flex-grow-1">
+        {% block body %}{% endblock %}
+    </div>
 <div class="container">
     <footer class="py-3 my-4">
         <ul class="nav justify-content-center border-bottom pb-3 mb-3">

@@ -1,3 +1,4 @@
 light_theme.css
 .env
 __pycache__
+app/static/sitemap.xml
