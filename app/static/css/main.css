@@ -98,6 +98,12 @@
         width: 100%;
         margin-bottom: 0.5rem;
     }
+
+    .btn-send {
+        width: auto;
+        max-width: 100%;
+        margin-bottom: 0rem;
+  }
 }
 
 .GoButton, #DataSort {
