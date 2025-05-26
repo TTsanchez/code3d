@@ -53,7 +53,7 @@
                                             src="{{post.code3d|safe}}"></iframe>
                                     {% elif post.technology3d == 'three.js' %}
                                     <div id="canvas-container" style="max-height: 300px; width: 100%;">
-                                        <canvas id="three-canvas" style="min-height: 300px; width: 100%;"></canvas>
+                                        <canvas willReadFrequently="true" id="three-canvas" style="min-height: 300px; width: 100%;"></canvas>
                                     </div>
                                     <script>
                                         document.addEventListener("DOMContentLoaded", function () {
@@ -100,7 +100,6 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>

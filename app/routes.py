@@ -1,7 +1,8 @@
 import datetime
+import os
 import traceback
 from datetime import datetime
-from flask import render_template, jsonify, redirect, url_for, flash, request
+from flask import render_template, jsonify, redirect, url_for, flash, request, make_response, send_from_directory
 from flask_login import current_user, login_manager, login_user, login_required, logout_user, LoginManager
 from flask_wtf.csrf import CSRFError
 from sqlalchemy import desc, func
@@ -550,3 +551,49 @@ def get_messages_api(user_id):
     } for msg in messages]
 
     return jsonify({'messages': messages_data})
+
+
+SITEMAP_PATH = os.path.join(app.static_folder, 'sitemap.xml')
+@app.route('/sitemap.xml')
+def sitemap():
+    pages = [
+        {'url': url_for('index', _external=True), 'priority': 1.0, 'changefreq': 'weekly'},
+        {'url': url_for('posts', _external=True), 'priority': 0.9, 'changefreq': 'hourly'},
+        {'url': url_for('forum', _external=True), 'priority': 0.8, 'changefreq': 'hourly'},
+        {'url': url_for('newpost', _external=True), 'priority': 0.4, 'changefreq': 'monthly'},
+        {'url': url_for('about', _external=True), 'priority': 0.3, 'changefreq': 'monthly'},
+    ]
+
+    posts = Posts.query.all()
+    for post in posts:
+        pages.append({
+            'url': url_for('post', post_id=post.post_id, _external=True),
+            'priority': 0.6,
+            'changefreq': 'weekly',
+            'lastmod': post.updated_at if hasattr(post, 'updated_at') else datetime.utcnow()
+        })
+
+    # Добавляем отдельные профили пользователей
+    users = Users.query.all()
+    for user in users:
+        pages.append({
+            'url': url_for('user', user_identifier=user.username, _external=True),
+            'priority': 0.4,
+            'changefreq': 'monthly'
+        })
+
+    sitemap_xml = render_template('sitemap.xml', pages=pages)
+
+    # Сохраняем в файл
+    with open(SITEMAP_PATH, 'w', encoding='utf-8') as f:
+        f.write(sitemap_xml)
+
+    response = make_response(sitemap_xml)
+    response.headers['Content-Type'] = 'application/xml'
+    return response
+
+
+@app.route('/robots.txt')
+def robots_txt():
+    return send_from_directory(app.static_folder, 'robots.txt', mimetype='text/plain')
+

@@ -20,7 +20,8 @@ class Users(db.Model, UserMixin):
 
     # Связи
     posts = db.relationship('Posts', backref='author', lazy=True)
-    comments = db.relationship('Comments', backref='author', lazy=True)
+    comments = db.relationship('Comments', back_populates='author', lazy=True)
+
     sent_messages = db.relationship('PrivateMessage', foreign_keys='PrivateMessage.sender_id', backref='sender',
                                     lazy=True)
     received_messages = db.relationship('PrivateMessage', foreign_keys='PrivateMessage.receiver_id', backref='receiver',
@@ -63,7 +64,7 @@ class Comments(db.Model):
     # Связи
     replies = db.relationship('Comments', backref=db.backref('parent', remote_side=[comment_id]), lazy=True)
     likes = db.relationship('CommentLike', backref='comment', lazy=True, cascade='all, delete-orphan')
-    user = db.relationship('Users', backref='user_comments')
+    author = db.relationship('Users', back_populates='comments')
 
 
 class PostLike(db.Model):

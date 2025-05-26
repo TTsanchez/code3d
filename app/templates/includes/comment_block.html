@@ -7,12 +7,12 @@
     <!-- Аватар и имя -->
     <div class="d-flex align-items-center mb-2">
         <a class="username d-flex align-items-center gap-2 text-decoration-none mb-2"
-           href="/user/{{ comment.user.username }}">
+           href="/user/{{ comment.author.username }}">
             <img src="https://i.postimg.cc/m27FcBSf/no-image.png"
                  alt="Avatar"
                  width="36" height="36"
                  class="rounded-circle shadow-sm me-2">
-            <span class="fw-semibold">{{ comment.user.username }}</span>
+            <span class="fw-semibold">{{ comment.author.username }}</span>
         </a>
     </div>
 
@@ -25,7 +25,7 @@
     <div class="d-flex justify-content-between align-items-center">
         <button class="btn btn-sm p-0 reply-btn"
                 data-comment-id="{{ comment.comment_id }}"
-                data-username="{{ comment.user.username }}">
+                data-username="{{ comment.author.username }}">
             <span class="nav-link m-0">Ответить</span>
         </button>
 
@@ -48,12 +48,12 @@
         <div class="comment border rounded p-2 my-2 shadow-sm" id="comment-{{ reply.comment_id }}">
             <div class="d-flex align-items-center mb-1">
                 <a class="username d-flex align-items-center gap-2 text-decoration-none mb-1"
-                   href="/user/{{ reply.user.username }}">
+                   href="/user/{{ reply.author.username }}">
                     <img src="https://i.postimg.cc/m27FcBSf/no-image.png"
                          alt="Avatar"
                          width="28" height="28"
                          class="rounded-circle shadow-sm me-2">
-                    <span class="fw-semibold">{{ reply.user.username }}</span>
+                    <span class="fw-semibold">{{ reply.author.username }}</span>
                 </a>
             </div>
             <div class="mb-1">
@@ -62,7 +62,7 @@
             <div class="d-flex justify-content-between align-items-center">
                 <button class="btn btn-sm p-0 reply-btn"
                         data-comment-id="{{ reply.comment_id }}"
-                        data-username="{{ reply.user.username }}">
+                        data-username="{{ reply.author.username }}">
                     <span class="nav-link m-0">Ответить</span>
                 </button>
                 <small>{{ reply.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
