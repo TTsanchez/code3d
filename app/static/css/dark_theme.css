@@ -29,11 +29,7 @@ p,pre,h1,h2,h3,h4,h5,h6,h7,a,label,loginModalLabel,small, button{
 }
 
 .del_button {
-    color: orangered;
-}
-
-.del_button:hover {
-    color: orangered;
+    color: orangered!important;
 }
 
 .x3dom-canvas,.three-canvas, iframe{

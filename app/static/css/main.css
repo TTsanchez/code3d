@@ -99,7 +99,7 @@
         margin-bottom: 0.5rem;
     }
 
-    .btn-send, .reply-btn {
+    .btn-send, .reply-btn, .btn-cancel {
         width: auto;
         max-width: 100%;
         margin-bottom: 0rem;

@@ -9,7 +9,9 @@
                     </a>
                     <ul class="dropdown-menu text-small" style="">
                         <li><a data-postid="{{ post.post_id }}" class="dropdown-item share-btn">Поделиться</a></li>
-                        {% if post.user_id == current_user.user_id or current_user.superuser == True %}
+                        {% if current_user.superuser
+                          or (post is defined and post.user_id == current_user.user_id)
+                          or (user is defined and user.user_id == current_user.user_id) %}
                         <li>
                             <button onclick='del_post("{{ post.post_id }}")' data-post-id="{{ post.post_id }}"
                                     class="dropdown-item del_button">Удалить
