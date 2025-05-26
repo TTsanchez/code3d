@@ -130,36 +130,74 @@ def forum():
 @app.route('/post/<int:post_id>')
 def post(post_id):
     try:
-        #
         post = Posts.query.filter_by(post_id=post_id).first()
-
-        if not post:  # Явная проверка на существование поста
+        if not post:
             return render_template('404.html', error="Пост не найден"), 404
 
-        # Упрощено: получаем пользователя напрямую через связь
         user = Users.query.get(post.user_id)
-
-        if not user:  # Проверка на существование пользователя
+        if not user:
             return render_template('404.html', error="Автор не найден"), 404
 
-        # Все id постов, которые лайкал текущий пользователь
         liked_post_ids = set()
         if current_user.is_authenticated:
             liked = PostLike.query.with_entities(PostLike.post_id).filter_by(user_id=current_user.user_id).all()
             liked_post_ids = {row.post_id for row in liked}
 
-        # Подгружаем комментарии
-        comments = Comments.query.filter_by(post_id=post_id, parent_comment_id=None).order_by(
-            Comments.created_at).all()
+        all_comments = Comments.query.filter_by(post_id=post_id).order_by(Comments.created_at).all()
+        comments_tree = prepare_comments_tree(all_comments, max_level=2)
 
         return render_template("post.html", post=post, user=user,
                                liked_post_ids=liked_post_ids,
-                               comments=comments,
+                               comments=comments_tree,
                                form=CommentForm())
 
     except Exception as e:
         app.logger.error(f"Ошибка при загрузке поста: {e}")
         return render_template('500.html', error="Ошибка сервера"), 500
+
+
+def prepare_comments_tree(comments, max_level=3):
+    # Словарь comment_id -> comment объект
+    comments_dict = {c.comment_id: c for c in comments}
+
+    # Словарь parent_comment_id -> list[comment]
+    children_map = {}
+    for c in comments:
+        parent_id = c.parent_comment_id
+        children_map.setdefault(parent_id, []).append(c)
+
+    def build_tree(comment, level=1):
+        if level > max_level:
+            return []  # сюда не идут, собираем отдельно
+
+        comment.replies = children_map.get(comment.comment_id, [])
+
+        # Для level == max_level надо собрать потомков всех уровней глубже в flat_replies
+        if level == max_level:
+            def gather_flat_replies(parent):
+                result = []
+                stack = children_map.get(parent.comment_id, []).copy()
+                while stack:
+                    node = stack.pop()
+                    result.append(node)
+                    stack.extend(children_map.get(node.comment_id, []))
+                return result
+
+            comment.flat_replies = gather_flat_replies(comment)
+            # Чтобы flat_replies не были в replies (иначе дублирование)
+            comment.replies = []
+
+        else:
+            for reply in comment.replies:
+                build_tree(reply, level + 1)
+
+        return comment
+
+    # Получаем только топ-уровневые комментарии (parent_comment_id == None)
+    roots = children_map.get(None, [])
+    tree = [build_tree(c) for c in roots]
+
+    return tree
 
 
 @app.route('/about')

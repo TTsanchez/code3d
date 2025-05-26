@@ -1,4 +1,9 @@
-<div class="comment border rounded p-3 my-3 shadow-sm">
+{% set margin_level = 0 if level == 1 else (level if level <= 3 else 3) %}
+
+<div class="comment border rounded p-3 my-3 shadow-sm"
+     style="margin-left: {{ 0.2 * margin_level }}rem;"
+     id="comment-{{ comment.comment_id }}">
+
     <!-- Аватар и имя -->
     <div class="d-flex align-items-center mb-2">
         <a class="username d-flex align-items-center gap-2 text-decoration-none mb-2"
@@ -19,21 +24,51 @@
     <!-- Кнопки -->
     <div class="d-flex justify-content-between align-items-center">
         <button class="btn btn-sm p-0 reply-btn"
-                data-comment-id="{{ comment.comment_id }}">
+                data-comment-id="{{ comment.comment_id }}"
+                data-username="{{ comment.user.username }}">
             <span class="nav-link m-0">Ответить</span>
         </button>
+
         <small>{{ comment.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
     </div>
 
     <!-- Вложенные ответы -->
     {% if comment.replies %}
     {% for reply in comment.replies %}
-        {% set comment = reply %}
-        {% include 'includes/comment_block.html' %}
+    {% set comment = reply %}
+    {% set level = level + 1 %}
+    {% include 'includes/comment_block.html' %}
     {% endfor %}
-{% endif %}
+    {% endif %}
 
-
-
-
+    <!-- Плоские ответы, если есть -->
+    {% if comment.flat_replies %}
+    <div class="flat-replies" style="margin-left: {{ -0.5 }}rem;">
+        {% for reply in comment.flat_replies %}
+        <div class="comment border rounded p-2 my-2 shadow-sm" id="comment-{{ reply.comment_id }}">
+            <div class="d-flex align-items-center mb-1">
+                <a class="username d-flex align-items-center gap-2 text-decoration-none mb-1"
+                   href="/user/{{ reply.user.username }}">
+                    <img src="https://i.postimg.cc/m27FcBSf/no-image.png"
+                         alt="Avatar"
+                         width="28" height="28"
+                         class="rounded-circle shadow-sm me-2">
+                    <span class="fw-semibold">{{ reply.user.username }}</span>
+                </a>
+            </div>
+            <div class="mb-1">
+                <p class="d-flex m-0">{{ reply.content }}</p>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+                <button class="btn btn-sm p-0 reply-btn"
+                        data-comment-id="{{ reply.comment_id }}"
+                        data-username="{{ reply.user.username }}">
+                    <span class="nav-link m-0">Ответить</span>
+                </button>
+                <small>{{ reply.created_at.strftime('%d.%m.%Y %H:%M') }}</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 </div>

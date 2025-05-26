@@ -99,7 +99,7 @@
         margin-bottom: 0.5rem;
     }
 
-    .btn-send {
+    .btn-send, .reply-btn {
         width: auto;
         max-width: 100%;
         margin-bottom: 0rem;
@@ -318,4 +318,22 @@ canvas {
 
 .x3dom-progress{
     visibility: hidden;
+}
+
+.comment {
+    background-color: #2a313c;
+    margin-left: 20px;
+}
+
+@media (max-width: 600px) {
+  .comment {
+    margin-left: 8px;
+  }
+}
+
+
+.highlight-comment {
+    border: 2px solid #00bcd4!important;
+    background-color: rgba(0, 188, 212, 0.1);
+    transition: background-color 0.3s ease;
 }

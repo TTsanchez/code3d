@@ -1,38 +1,68 @@
 <div class="comments-section ms-3 me-3" id="comments-section">
     <h5>Комментарии ({{ post.comments | length }})</h5>
-    <!-- Сначала форма для нового комментария -->
+
     {% if current_user.is_authenticated %}
-    <form action="{{ url_for('add_comment', post_id=post.post_id) }}" method="post" class="mb-3"
-          id="comment-form">
+    <form action="{{ url_for('add_comment', post_id=post.post_id) }}" method="post" class="mb-3" id="comment-form">
         {{ form.hidden_tag() }}
-        {{ form.parent_comment_id(value="") }}
+        {{ form.parent_comment_id(id="parent_comment_id", value="") }}
         <div class="mb-2">
             {{ form.content(class="form-control", rows="2", placeholder="Добавить комментарий...") }}
         </div>
         {{ form.submit(class="btn btn-primary btn-sm") }}
+        <button type="button" class="btn btn-secondary btn-sm" id="cancel-reply-btn"
+                style="display:none; ">Отмена
+        </button>
     </form>
     {% else %}
     <p><a href="#" onclick="showLoginModal()">Войдите</a>, чтобы оставить комментарий.</p>
     {% endif %}
 
-    <!-- Теперь сами комментарии -->
-{% for comment in post.comments if not comment.parent_comment_id %}
-    {% set _ = namespace(comment=comment) %}
-    {% include 'includes/comment_block.html' with context %}
-{% endfor %}
-
-    <script>
-        document.querySelectorAll('.reply-btn').forEach(btn => {
-            btn.addEventListener('click', function () {
-                const commentId = this.getAttribute('data-comment-id');
-                document.getElementById('parent_comment_id').value = commentId;
-                window.scrollTo({
-                    top: document.getElementById('comment-form').offsetTop,
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
-
-
+    {% for comment in comments %}
+    {% set level = 1 %}
+    {% set comment = comment %}
+    {% include 'includes/comment_block.html' %}
+    {% endfor %}
 </div>
+
+
+<script>
+    const cancelReplyBtn = document.getElementById('cancel-reply-btn');
+    const parentInput = document.getElementById('parent_comment_id');
+    const textarea = document.querySelector('#comment-form textarea');
+
+    document.querySelectorAll('.reply-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const commentId = this.getAttribute('data-comment-id');
+            const username = this.getAttribute('data-username');
+
+            parentInput.value = commentId;
+            textarea.value = `@${username}, `;
+            textarea.focus();
+
+            cancelReplyBtn.style.display = 'inline-block';
+
+            document.querySelectorAll('.comment').forEach(el => {
+                el.classList.remove('highlight-comment');
+            });
+
+            const targetComment = document.querySelector(`#comment-${commentId}`);
+            if (targetComment) {
+                targetComment.classList.add('highlight-comment');
+                targetComment.scrollIntoView({behavior: 'smooth', block: 'center'});
+            }
+        });
+    });
+
+    cancelReplyBtn.addEventListener('click', () => {
+        parentInput.value = '';
+        textarea.value = '';
+        textarea.focus();
+
+        cancelReplyBtn.style.display = 'none';
+
+        document.querySelectorAll('.comment').forEach(el => {
+            el.classList.remove('highlight-comment');
+        });
+    });
+
+</script>
