@@ -598,6 +598,6 @@ def robots_txt():
     return send_from_directory(app.static_folder, 'robots.txt', mimetype='text/plain')
 
 
-@app.route('/yandex_4d81fceebbd66db2')
+@app.route('/yandex_4d81fceebbd66db2.html')
 def yandex():
     return ("Verification: 4d81fceebbd66db2")
