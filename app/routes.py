@@ -600,4 +600,4 @@ def robots_txt():
 
 @app.route('/yandex_4d81fceebbd66db2.html')
 def yandex():
-    return ("Verification: 4d81fceebbd66db2")
+    return send_from_directory('static', 'yandex_4d81fceebbd66db2.html')
