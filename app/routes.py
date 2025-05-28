@@ -601,3 +601,8 @@ def robots_txt():
 @app.route('/yandex_4d81fceebbd66db2.html')
 def yandex():
     return send_from_directory('static', 'yandex_4d81fceebbd66db2.html')
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
