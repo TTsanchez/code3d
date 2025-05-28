@@ -12,6 +12,7 @@ import re
 from app import app, db
 from app.classes_bd import Posts, Users, PostLike, Comments, CommentLike, PrivateMessage
 from app.forms import CreatePostForm, RegistrationForm, AuthorizationForm, CommentForm, MessageForm
+# from routes_forum import *
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -596,3 +597,7 @@ def sitemap():
 def robots_txt():
     return send_from_directory(app.static_folder, 'robots.txt', mimetype='text/plain')
 
+
+@app.route('/yandex_4d81fceebbd66db2')
+def yandex():
+    return ("Verification: 4d81fceebbd66db2")
