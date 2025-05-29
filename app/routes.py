@@ -557,17 +557,17 @@ SITEMAP_PATH = os.path.join(app.static_folder, 'sitemap.xml')
 @app.route('/sitemap.xml')
 def sitemap():
     pages = [
-        {'url': url_for('index', _external=True), 'priority': 1.0, 'changefreq': 'weekly'},
-        {'url': url_for('posts', _external=True), 'priority': 0.9, 'changefreq': 'hourly'},
-        {'url': url_for('forum', _external=True), 'priority': 0.8, 'changefreq': 'hourly'},
-        {'url': url_for('newpost', _external=True), 'priority': 0.4, 'changefreq': 'monthly'},
-        {'url': url_for('about', _external=True), 'priority': 0.3, 'changefreq': 'monthly'},
+        {'url': url_for('index', _external=True, _scheme='https'), 'priority': 1.0, 'changefreq': 'weekly'},
+        {'url': url_for('posts', _external=True, _scheme='https'), 'priority': 0.9, 'changefreq': 'hourly'},
+        {'url': url_for('forum', _external=True, _scheme='https'), 'priority': 0.8, 'changefreq': 'hourly'},
+        {'url': url_for('newpost', _external=True, _scheme='https'), 'priority': 0.4, 'changefreq': 'monthly'},
+        {'url': url_for('about', _external=True, _scheme='https'), 'priority': 0.3, 'changefreq': 'monthly'},
     ]
 
     posts = Posts.query.all()
     for post in posts:
         pages.append({
-            'url': url_for('post', post_id=post.post_id, _external=True),
+            'url': url_for('post', post_id=post.post_id, _external=True, _scheme='https'),
             'priority': 0.6,
             'changefreq': 'weekly',
             'lastmod': post.updated_at if hasattr(post, 'updated_at') else datetime.utcnow()
@@ -577,7 +577,7 @@ def sitemap():
     users = Users.query.all()
     for user in users:
         pages.append({
-            'url': url_for('user', user_identifier=user.username, _external=True),
+            'url': url_for('user', user_identifier=user.username, _external=True, _scheme='https'),
             'priority': 0.4,
             'changefreq': 'monthly'
         })
