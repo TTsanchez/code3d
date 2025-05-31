@@ -32,6 +32,8 @@
         const isAuthenticated = {{ 'true' if current_user.is_authenticated else 'false' }};
     </script>
 
+    {% include 'includes/ya_metrica.html' %}
+
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body class="d-flex flex-column min-vh-100">
